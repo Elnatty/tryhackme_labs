@@ -18,10 +18,25 @@ gpg --import publickey # tries to decrypt the pubkey.
 ```
 {% endcode %}
 
-### dns
+### zip2john
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
+# we can use this utility to convert a passworded zip file into a crackable format for john.
+zip2john img.zip > hash.txt
+john hash.txt # to crack it.
+
+# After cracking the password, use 7z to input password.
+7z e img.zip
+```
+{% endcode %}
+
+### hash analyzer
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# identify hashes
+https://www.tunnelsup.com/hash-analyzer/
 ```
 {% endcode %}
 
@@ -106,10 +121,18 @@ hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.241.210 http-post-form 
 ```
 {% endcode %}
 
-###
+### Steganography
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
+# There are many tools used to view embedded files or text on Images.
+# Some are:
+xxd img.png
+strings img.pg
+binwalk -e img.png
+steghide extract -sf img.png
+https://futureboy.us/stegano/decinput.html
+exiftool img.png
 ```
 {% endcode %}
 
