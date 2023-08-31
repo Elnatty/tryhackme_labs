@@ -1,5 +1,18 @@
 # tyhackme Tricks
 
+### tryhackme vpn tips
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# incase you don't get a "Initialization sequence complete.
+sudo openvpn --data-ciphers AES-256-GCM:AES-128-GCM:CHACHA20-POLY1305:AES-256-CBC --config D31ng.ovpn
+
+# when you get a: [read UDPv4 [EMSGSIZE Path-MTU=1440]: Message too long (fd=3,code=90)] error, it means the MTU size is too large.
+# open the config file and add this line of cmd.
+tun-mtu 1300
+```
+{% endcode %}
+
 ### base64, gpg
 
 {% code overflow="wrap" lineNumbers="true" %}
