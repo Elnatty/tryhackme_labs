@@ -44,6 +44,15 @@ john hash.txt # to crack it.
 ```
 {% endcode %}
 
+### ssh2john
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# to crack an ssh priv key (id_rsa key) we use ssh2john to convert it to john format.
+ssh2john id_rsa > id_john
+```
+{% endcode %}
+
 ### hash analyzer
 
 {% code overflow="wrap" lineNumbers="true" %}
