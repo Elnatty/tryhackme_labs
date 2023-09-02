@@ -5,4 +5,5 @@
 * [3 - Intro pOc Scripting](3-intro-poc-scripting.md)
 * [4 - Peak Hill](4-peak-hill.md)
 * [5 - bruteit](5-bruteit.md)
+* [6 - Windows Priv Esc](6-windows-priv-esc.md)
 * [tyhackme Tricks](tyhackme-tricks.md)
