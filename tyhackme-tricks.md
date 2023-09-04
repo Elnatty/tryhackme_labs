@@ -50,6 +50,10 @@ john hash.txt # to crack it.
 ```bash
 # to crack an ssh priv key (id_rsa key) we use ssh2john to convert it to john format.
 ssh2john id_rsa > id_john
+
+# alternative to ssh2john is sed
+# we could use "sed" to achieve same result.
+sed 's/decodestring/decodebytes/' /usr/bin/ssh2john | python3 - id_rsa > hash_id
 ```
 {% endcode %}
 
