@@ -8,4 +8,4 @@
 * [6 - Windows Priv Esc](6-windows-priv-esc.md)
 * [7 - Linux PrivEsc](7-linux-privesc.md)
 * [tyhackme Tricks](tyhackme-tricks.md)
-* [Page 2](page-2.md)
+* [8 - Blueprint](8-blueprint.md)
