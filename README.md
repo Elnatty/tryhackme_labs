@@ -170,6 +170,7 @@ gobuster dir -u http://10.10.138.195:8080/ -x php,html,txt,aspx,asp -t 15 -q -w 
 
 dirsearch -u http://blueprint.thm:8080/ -e php,cgi,html,txt -x 400,401,403 -r -t 100
 
+ffuf -u http://10.10.67.73/FUZZ -w /usr/share/wordlists/dirb/big.txt
 ```
 {% endcode %}
 

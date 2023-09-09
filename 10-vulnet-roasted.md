@@ -151,7 +151,7 @@ hashcat -m 18200 hash.txt /usr/share/wordlists/rockyou.txt
 
 #### Initial Access
 
-Since Win-RM (5985) is open, we tried logging in with Evil-WinRM, but it did'nt work.
+Since Win-RM (5985) is open, we tried logging in with Evil-WinRM, wmiexec, smbexec, etc.., but it did'nt work.
 
 We can use "crackmapexec" to enumerate other users that could be using same password as "t-skid" user.
 

