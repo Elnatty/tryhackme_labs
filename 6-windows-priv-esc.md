@@ -70,7 +70,7 @@ Using `winPEASany.exe quite servicesinfo` - we see an "unquotedsvc" service, let
 
 we’ll use this script [Get-ServiceACL](https://rohnspowershellblog.wordpress.com/2013/03/19/viewing-service-acls/) to check if we have permission to start and stop the service.
 
-`"wuauserv" | Get-ServiceAcl | select -ExpandProperty Access` .
+`"<service_name>" | Get-ServiceAcl | select -ExpandProperty Access` .
 
 
 
