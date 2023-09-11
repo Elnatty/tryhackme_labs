@@ -60,11 +60,19 @@ Using `winPEASany.exe quite servicesinfo` - we see an "unquotedsvc" service, let
 
 <figure><img src=".gitbook/assets/image (15).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
-Let's check if we have "read/write" access to the path.
+#### A - Let's check if we have "read/write" access to the path.
 
 `.\accesschk.exe /accepteula -uwdq "C:\Program Files\Unquoted Path Service"` - we have "RW" access, meaning we can replace the default service exe with our custom rev shell exe.
 
 <figure><img src=".gitbook/assets/image (16).png" alt=""><figcaption><p>2</p></figcaption></figure>
+
+#### B - Lets check if we have permission to start and stop the  service.
+
+we’ll use this script [Get-ServiceACL](https://rohnspowershellblog.wordpress.com/2013/03/19/viewing-service-acls/) to check if we have permission to start and stop the service.
+
+`"wuauserv" | Get-ServiceAcl | select -ExpandProperty Access` .
+
+
 
 Copy the reverse.exe payload to the file path.
 
