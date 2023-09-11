@@ -44,6 +44,15 @@ john hash.txt # to crack it.
 ```
 {% endcode %}
 
+### fcrackzip
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# another zip cracking utility.
+fcrackzip -u -D -p /usr/share/wordlists/rockyou.txt <zipfile>
+```
+{% endcode %}
+
 ### ssh2john
 
 {% code overflow="wrap" lineNumbers="true" %}
