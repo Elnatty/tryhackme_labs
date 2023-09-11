@@ -1,4 +1,4 @@
-# 10 - Vulnet Roasted
+# 10 - AD - Vulnet Roasted
 
 Room Link --> [https://tryhackme.com/room/vulnnetroasted](https://tryhackme.com/room/vulnnetroasted)
 
@@ -32,7 +32,7 @@ Service Info: Host: WIN-2BO8M1OE1M1; OS: Windows; CPE: cpe:/o:microsoft:windows
 
 Smb Enumeration: we viewed the shares.
 
-{% code fullWidth="true" %}
+{% code overflow="wrap" lineNumbers="true" fullWidth="true" %}
 ```bash
 # using SMBMap.
 smbmap -H 10.10.15.112 -u ' '
@@ -46,7 +46,10 @@ smbmap -H 10.10.15.112 -u ' '
 	VulnNet-Enterprise-Anonymous                      	READ ONLY	VulnNet Enterprise Sharing
 	
 # using crackmapexec.
-crackmapexec smb 10.10.175.103 -u guest -p "" --shares
+crackmapexec smb 10.10.175.103 -u anonymous -p "" --shares
+
+# using crackmapexec to spider the entire shares.
+crackmapexec smb 10.10.88.203 -u anonymous -p '' -M spider_plus -o READ_ONLY=true
 ```
 {% endcode %}
 
