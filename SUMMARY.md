@@ -11,7 +11,7 @@
 * [8 - Blueprint](8-blueprint.md)
 * [9 - AD - VulnNet Active](9-ad-vulnnet-active.md)
 * [10 - AD - Vulnet Roasted](10-ad-vulnet-roasted.md)
-* [Page 3](page-3.md)
+* [11 - AD - RazorBlack](11-ad-razorblack.md)
 * [Page 4](page-4.md)
 * [Page 5](page-5.md)
 * [Page 6](page-6.md)
