@@ -118,7 +118,7 @@ Note: you can always use the `ctrl+f` feature to find for important stuffs from 
 
 {% endhint %}
 
-<figure><img src=".gitbook/assets/image (6) (1).png" alt=""><figcaption><p>ctrl+f</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1) (1).png" alt=""><figcaption><p>ctrl+f</p></figcaption></figure>
 
 ### Bypassing some python restriction to get reverse shell
 

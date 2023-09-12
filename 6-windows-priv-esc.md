@@ -28,7 +28,7 @@ Use accesschk.exe to check the "user" account's permissions on the "daclsvc" ser
 
 `C:\PrivEsc\accesschk.exe /accepteula -uwcqve user daclsvc`
 
-<figure><img src=".gitbook/assets/image (11).png" alt=""><figcaption><p>1</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (11) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
 It shows the "user" account has the permission to change the service config (SERVICE\_CHANGE\_CONFIG).
 
@@ -36,11 +36,11 @@ Query the service and note that it runs with SYSTEM privileges (SERVICE\_START\_
 
 `sc qc daclsvc`
 
-<figure><img src=".gitbook/assets/image (12).png" alt=""><figcaption><p>2</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (12) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
 
 Checking if the service is running or stopped currently `sc query daclsvc`&#x20;
 
-<figure><img src=".gitbook/assets/image (13).png" alt=""><figcaption><p>3</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (13) (1).png" alt=""><figcaption><p>3</p></figcaption></figure>
 
 We can modify the service config and set the BINARY\_PATH\_NAME (binpath) to the reverse.exe executable:
 
@@ -50,7 +50,7 @@ Start a listener on Kali and then start the service to spawn a reverse shell run
 
 `net start daclsvc`
 
-<figure><img src=".gitbook/assets/image (14).png" alt=""><figcaption><p>4</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (14) (1).png" alt=""><figcaption><p>4</p></figcaption></figure>
 
 ### 2 - Unquoted Service Paths
 

