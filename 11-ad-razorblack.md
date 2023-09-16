@@ -263,7 +263,7 @@ evil-winrm -i 10.10.90.215 -u lvetrova -H f220d3988deb3f516c73f40ee16c431d
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption><p>11</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption><p>11</p></figcaption></figure>
 
 ### Ljudmila's Flag
 

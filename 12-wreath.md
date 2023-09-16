@@ -152,7 +152,7 @@ for i in {21 80 111 135 139 445 443 8080 3389}; do (echo > /dev/tcp/10.200.87.20
 
 I used a static nmap binary file and scan the internal networks from the victim 10.200.87.200 and found 3 other hosts.
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption><p>pivot enumeration.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption><p>pivot enumeration.</p></figcaption></figure>
 
 ### <mark style="color:red;">Proxychains & Foxyproxy</mark>
 
@@ -206,7 +206,7 @@ There are two ways to create a forward SSH tunnel using the SSH client --> **por
   `ssh -L 9051:10.200.87.150:80 root@10.200.87.200 -fN`\
   &#x20;The `-fN` combined switch does two things: `-f` backgrounds the shell immediately so that we have our own terminal back. `-N` tells SSH that it doesn't need to execute any commands -- only set up the connection.
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>Access webpage hosted on port 80 10.200.87.150, from our kali localhost:9051</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption><p>Access webpage hosted on port 80 10.200.87.150, from our kali localhost:9051</p></figcaption></figure>
 
 * **Proxies (forward proxy)** are made using the `-D` switch, for example: `-D 1337`. This will open up port 1337 on your attacking box as a proxy to send data through into the protected network. This is useful when combined with a tool such as proxychains. An example of this command would be:\
   `ssh -D 1337 root@10.200.87.150 -fN`
@@ -281,6 +281,24 @@ For example, to connect to 172.16.0.5:8000 (the compromised host running a chise
 `./chisel client 172.16.0.5:8000 2222:172.16.0.10:22`
 
 ### <mark style="color:red;">4 - SSHuttle</mark>
+
+`sshuttle -r username@address -N` - If this has worked, you should see the following line:\
+`c : Connected to server.`
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# We use the "--ssh -i" to specify ssh key, "-N" to specify entire subnet automatically, "-x" to exclude the actual ssh host we are connecting to.
+sshuttle -r root@10.200.87.200 --ssh-cmd "ssh -i id_rsa" -N -x 10.200.87.200
+```
+{% endcode %}
+
+And we are able to access the "10.200.87.150" web server easily as shown in the image below.
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+
+
+
 
 
 
