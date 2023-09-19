@@ -13,6 +13,6 @@
 * [10 - AD - Vulnet Roasted](10-ad-vulnet-roasted.md)
 * [11 - AD - RazorBlack](11-ad-razorblack.md)
 * [12 - Wreath](12-wreath.md)
-* [Page 5](page-5.md)
+* [13 - Cicada-3301 Vol1](13-cicada-3301-vol1.md)
 * [Page 6](page-6.md)
 * [Page 7](page-7.md)
