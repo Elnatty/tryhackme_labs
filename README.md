@@ -183,7 +183,17 @@ ffuf -u http://10.10.67.73/FUZZ -w /usr/share/wordlists/dirb/big.txt
 ```
 {% endcode %}
 
+### pop3 / imap (110,143) cmds
 
+Once we have valid mail credentials we can use netcat to view users mailbox.
+
+```
+nc $ip 110 # to login.
+USER <username> # enter username.
+PASS <passw> # enter user password.
+LIST # view user imbox.
+RETR 1 # view each mail with id, 1 or 2 or 3 etc...
+```
 
 
 
