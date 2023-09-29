@@ -23,11 +23,21 @@ gpg --cipher-algo [encryption type] [encryption method] [file to encrypt] # encr
 # to decrypt: gpg <fileName>.
 
 # decrypting gpg encrypted files with john (jtr).
+# could be a .asc file, etc..
 gpg2john [encrypted_gpg_file] > [output_name]
 john wordlist=[location/name of wordlist] --format=gpg [name of hash we just created]
 
 # we can also import a pgp (public key) key/file and decrypt with gpg.
 gpg --import publickey # tries to decrypt the pubkey.
+
+===================================================
+# If you hava a ".pgp" and ".asc" file.
+===================================================
+# 1st we import the key, but if require password, we can use gpg2john to crack.
+gpg --import file.asc 
+
+# 2nd after cracking/importing. Time to decrypt the ".pgp" file.
+gpg --decrypt file.pgp
 ```
 {% endcode %}
 
