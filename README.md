@@ -31,7 +31,7 @@ john wordlist=[location/name of wordlist] --format=gpg [name of hash we just cre
 gpg --import publickey # tries to decrypt the pubkey.
 
 ===================================================
-# If you hava a ".pgp" and ".asc" file.
+# If you hava a ".pgp" or ".asc" or ".key" file. These are keys.
 ===================================================
 # 1st we import the key, but if require password, we can use gpg2john to crack.
 gpg --import file.asc 
