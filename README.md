@@ -184,6 +184,15 @@ exiftool img.png
 # for music files (.mp3, .wav etc.)
 ==================================
 sonic-visualiser
+
+==================================
+# For distorted files.
+# when we use for example; `file image.png` to view the file type and get some distorted value or suspect the result is wrong, we can use some tools to view, modify and verify the HEX value of such files. 
+# site to check the actual HEX value for all file types:
+https://en.wikipedia.org/wiki/List_of_file_signatures?source=post_page-----8a8080672083--------------------------------
+# tools to modify hex values.
+ghex image.png
+hexeditor image.png
 ```
 {% endcode %}
 
