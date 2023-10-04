@@ -176,8 +176,14 @@ xxd img.png
 strings img.pg
 binwalk -e img.png
 steghide extract -sf img.png
+outguess -r image.jpg output_file
 https://futureboy.us/stegano/decinput.html
 exiftool img.png
+
+==================================
+# for music files (.mp3, .wav etc.)
+==================================
+sonic-visualiser
 ```
 {% endcode %}
 
