@@ -172,13 +172,18 @@ hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.241.210 http-post-form 
 ```bash
 # There are many tools used to view embedded files or text on Images.
 # Some are:
-xxd img.png
-strings img.pg
-binwalk -e img.png
-steghide extract -sf img.png
-outguess -r image.jpg output_file
-https://futureboy.us/stegano/decinput.html
-exiftool img.png
+1. xxd img.png
+2. strings img.pg
+3. binwalk -e img.png
+4. steghide extract -sf img.png
+5. outguess -r image.jpg output_file
+6. https://futureboy.us/stegano/decinput.html
+7. exiftool img.png
+8. stegsolve.jar 
+# to install stegsolve.jar
+wget http://www.caesum.com/handbook/Stegsolve.jar -O stegsolve.jar
+chmod +x stegsolve.jar
+java -jar stegsolve.jar # to run.
 
 ==================================
 # for music files (.mp3, .wav etc.)
