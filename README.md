@@ -252,7 +252,16 @@ SITE CPTO /var/tmp/id_rsa # copy to NFS /var share.
 ```
 {% endcode %}
 
+## Hashcat
 
+```bash
+# cracking sha512 hash with salt.
+# create a hash.txt file and enter the sha512hash and salt using the format below:
+<sha512_hash>:<salt>
+
+# crack using hashcat.
+hashcat -m 1710 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
+```
 
 
 
