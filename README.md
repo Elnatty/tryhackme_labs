@@ -205,7 +205,7 @@ hexeditor image.png
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
-gobuster dir -u http://10.10.138.195:8080/ -x php,html,txt,aspx,asp -t 15 -q -w /usr/share/wordlists/dirb/common.txt
+gobuster dir -u http://10.10.47.188/ -w /usr/share/dirb/wordlists/common.txt -x php,html,js,txt --timeout 20s -t 500 2>/dev/null
 
 dirsearch -u http://blueprint.thm:8080/ -e php,cgi,html,txt -x 400,401,403 -r -t 100
 
