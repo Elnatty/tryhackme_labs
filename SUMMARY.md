@@ -17,7 +17,7 @@
 * [14 - AD - Breaching AD](14-ad-breaching-ad.md)
 * [15 - ffuf](15-ffuf.md)
 * [16 - Chill Hack](16-chill-hack.md)
-* [Page 2](page-2.md)
+* [17 - ColdBox (wordpress)](17-coldbox-wordpress.md)
 * [Page 3](page-3.md)
 * [Page 4](page-4.md)
 * [Page 5](page-5.md)
