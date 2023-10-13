@@ -18,7 +18,7 @@
 * [15 - ffuf](15-ffuf.md)
 * [16 - Chill Hack](16-chill-hack.md)
 * [17 - ColdBox (wordpress)](17-coldbox-wordpress.md)
-* [Page 3](page-3.md)
+* [18 - All in One](18-all-in-one.md)
 * [Page 4](page-4.md)
 * [Page 5](page-5.md)
 * [Page 6](page-6.md)
