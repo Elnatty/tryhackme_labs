@@ -21,7 +21,7 @@
 * [18 - All in One (web exploitation)](18-all-in-one-web-exploitation.md)
 * [19  - Archangel (LFI vuln)](19-archangel-lfi-vuln.md)
 * [20 - Cyborg](20-cyborg.md)
-* [Page 6](page-6.md)
+* [21 - Lunizz CTF](21-lunizz-ctf.md)
 * [Page 1](page-1.md)
 * [Page 2](page-2.md)
 * [Page 3](page-3.md)
