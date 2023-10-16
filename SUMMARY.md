@@ -23,7 +23,7 @@
 * [20 - Cyborg](20-cyborg.md)
 * [21 - Lunizz CTF](21-lunizz-ctf.md)
 * [22 - Badbyte](22-badbyte.md)
-* [Page 2](page-2.md)
+* [23 - Team](23-team.md)
 * [Page 3](page-3.md)
 * [Page 4](page-4.md)
 * [Page 7](page-7.md)
