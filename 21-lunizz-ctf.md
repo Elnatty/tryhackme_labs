@@ -1,3 +1,7 @@
+---
+description: vulnerable sudo version.
+---
+
 # 21 - Lunizz CTF
 
 Room Link --> [https://tryhackme.com/room/lunizzctfnd](https://tryhackme.com/room/lunizzctfnd)
