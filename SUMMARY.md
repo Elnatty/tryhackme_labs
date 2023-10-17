@@ -24,7 +24,7 @@
 * [21 - Lunizz CTF](21-lunizz-ctf.md)
 * [22 - Badbyte](22-badbyte.md)
 * [23 - Team](23-team.md)
-* [Page 3](page-3.md)
+* [24 - VulnNet: Node](24-vulnnet-node.md)
 * [Page 4](page-4.md)
 * [Page 7](page-7.md)
 * [Page 8](page-8.md)
