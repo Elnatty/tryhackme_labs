@@ -25,7 +25,7 @@
 * [22 - Badbyte](22-badbyte.md)
 * [23 - Team](23-team.md)
 * [24 - VulnNet: Node](24-vulnnet-node.md)
-* [Page 4](page-4.md)
+* [VulnNet: Internal](vulnnet-internal.md)
 * [Page 7](page-7.md)
 * [Page 8](page-8.md)
 * [Page 9](page-9.md)
