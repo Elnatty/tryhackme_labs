@@ -26,7 +26,7 @@
 * [23 - Team](23-team.md)
 * [24 - VulnNet: Node](24-vulnnet-node.md)
 * [25 - VulnNet: Internal](25-vulnnet-internal.md)
-* [26 - Mustacchio](26-mustacchio.md)
+* [26 - Mustacchio (XML Injection)](26-mustacchio-xml-injection.md)
 * [Page 8](page-8.md)
 * [Page 9](page-9.md)
 * [Page 10](page-10.md)
