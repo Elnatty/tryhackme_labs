@@ -28,6 +28,6 @@
 * [25 - VulnNet: Internal](25-vulnnet-internal.md)
 * [26 - Mustacchio (XML Injection)](26-mustacchio-xml-injection.md)
 * [28 - StuxCTF - PHP Deserialization](28-stuxctf-php-deserialization.md)
-* [Page 9](page-9.md)
+* [29 - BoilerCTF](29-boilerctf.md)
 * [Page 10](page-10.md)
 * [Page 11](page-11.md)
