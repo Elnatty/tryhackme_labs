@@ -29,5 +29,5 @@
 * [26 - Mustacchio (XML Injection)](26-mustacchio-xml-injection.md)
 * [28 - StuxCTF - PHP Deserialization](28-stuxctf-php-deserialization.md)
 * [29 - BoilerCTF](29-boilerctf.md)
-* [Page 10](page-10.md)
+* [30 - HA Joker CTF](30-ha-joker-ctf.md)
 * [Page 11](page-11.md)
