@@ -33,7 +33,7 @@ Navigating to http://10.10.109.222/custom and discovered a "users.bak" sqlite db
 
 <figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Or we can use the Sqlite3 cmd binary to view.
 
@@ -84,7 +84,7 @@ Navigating to `http://10.10.109.222:8765/index.php` was an admin login session.
 
 I tried the admin credentials and was logged in successfully.
 
-<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 After authentication ,check the source code and see a link in the "\<script>" session.
 

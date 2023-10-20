@@ -152,7 +152,7 @@ for i in {21 80 111 135 139 445 443 8080 3389}; do (echo > /dev/tcp/10.200.87.20
 
 I used a static nmap binary file and scan the internal networks from the victim 10.200.87.200 and found 3 other hosts.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>pivot enumeration.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>pivot enumeration.</p></figcaption></figure>
 
 ### <mark style="color:red;">Proxychains & Foxyproxy</mark>
 
@@ -206,12 +206,12 @@ There are two ways to create a forward SSH tunnel using the SSH client --> **por
   `ssh -L 9051:10.200.87.150:80 root@10.200.87.200 -fN`\
   &#x20;The `-fN` combined switch does two things: `-f` backgrounds the shell immediately so that we have our own terminal back. `-N` tells SSH that it doesn't need to execute any commands -- only set up the connection.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>Access webpage hosted on port 80 10.200.87.150, from our kali localhost:9051</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>Access webpage hosted on port 80 10.200.87.150, from our kali localhost:9051</p></figcaption></figure>
 
 * **Proxies (forward proxy)** are made using the `-D` switch, for example: `-D 1337`. This will open up port 1337 on your attacking box as a proxy to send data through into the protected network. This is useful when combined with a tool such as proxychains. An example of this command would be:\
   `ssh -D 1337 root@10.200.87.150 -fN`
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>Proxy connection to 10.200.87.150</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>Proxy connection to 10.200.87.150</p></figcaption></figure>
 
 Now we can even scan entire 65535 port:
 
@@ -429,15 +429,15 @@ Our server: `python3 -m http.server 80` .
 
 So it’s an error page. There are 3 endpoints `/registration/login` `/gitstack` and `/rest`
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>http://10.200.87.150/gitstack</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>http://10.200.87.150/gitstack</p></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>searching google for available exploit</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>searching google for available exploit</p></figcaption></figure>
 
 We got one from exploit-db --> [https://www.exploit-db.com/exploits/43777](https://www.exploit-db.com/exploits/43777)
 
 We edited the "ip address" and "cmd" using nano.
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>modifying exploit</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>modifying exploit</p></figcaption></figure>
 
 `python2 43777.py` - running exploit.
 
@@ -769,9 +769,9 @@ Reading the Hint on the Question: i figured there's a "todo" list somewhere, so 
 
 `grep -iRl 'todo' .` - while in the "345ac..." directory.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>the todo list.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>the todo list.</p></figcaption></figure>
 
 Especially the 3rd bullet is interesting. This tells us that this page might be protected by basic auth.
 

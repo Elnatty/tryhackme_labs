@@ -30,4 +30,4 @@
 * [28 - StuxCTF - PHP Deserialization](28-stuxctf-php-deserialization.md)
 * [29 - BoilerCTF](29-boilerctf.md)
 * [30 - HA Joker CTF](30-ha-joker-ctf.md)
-* [Page 11](page-11.md)
+* [31 - Willow](31-willow.md)

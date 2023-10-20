@@ -56,7 +56,7 @@ gobuster dir -u http://10.10.62.87 -w /usr/share/dirb/wordlists/common.txt -x tx
 
 Navigating to --> [http://10.10.62.87/joomla/](http://10.10.62.87/joomla/) and started looking around.
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 More enumeration with gobuster.
 
@@ -105,11 +105,11 @@ Reading the [exploit](https://www.exploit-db.com/exploits/47204), it seemed that
 
 #### **Exploitation**
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 And it's wordking, we can list al files. The file is "log.txt".
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 > http://10.10.72.60/joomla/\_test/index.php?plot=;cat log.txt
 
