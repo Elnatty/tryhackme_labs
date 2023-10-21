@@ -31,7 +31,7 @@
 * [29 - BoilerCTF](29-boilerctf.md)
 * [30 - HA Joker CTF](30-ha-joker-ctf.md)
 * [31 - Willow (RSA calculator for SSH key)](31-willow-rsa-calculator-for-ssh-key.md)
-* [32 -](32.md)
+* [32 - The Marketplace (XSS and SQLi)](32-the-marketplace-xss-and-sqli.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
 * [Copy of 32 -](copy-of-32-2.md)
