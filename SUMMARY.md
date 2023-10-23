@@ -32,6 +32,7 @@
 * [30 - HA Joker CTF](30-ha-joker-ctf.md)
 * [31 - Willow (RSA calculator for SSH key)](31-willow-rsa-calculator-for-ssh-key.md)
 * [32 - The Marketplace (XSS and SQLi)](32-the-marketplace-xss-and-sqli.md)
+* [33 - NAX](33-nax.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
 * [Copy of 32 -](copy-of-32-2.md)
@@ -55,4 +56,3 @@
 * [Copy of 32 -](copy-of-32-20.md)
 * [Copy of 32 -](copy-of-32-21.md)
 * [Copy of 32 -](copy-of-32-22.md)
-* [Copy of 32 -](copy-of-32-23.md)

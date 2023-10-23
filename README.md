@@ -168,6 +168,37 @@ hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.241.210 http-post-form 
 
 ### Steganography
 
+<details>
+
+<summary>Tools for Image Steganography</summary>
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+steganography
+tools
+steghide
+foremost
+stegsolve
+strings
+exiftool
+exiv2
+binwalk
+zsteg
+wavsteg
+sonic-visualizer
+web-tools
+unicode-text-steganography
+npiet-online
+dcodefr
+bruteforcers
+stegcracker
+fcrackzip
+challenges
+```
+{% endcode %}
+
+</details>
+
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
 # There are many tools used to view embedded files or text on Images.
