@@ -33,7 +33,7 @@
 * [31 - Willow (RSA calculator for SSH key)](31-willow-rsa-calculator-for-ssh-key.md)
 * [32 - The Marketplace (XSS and SQLi)](32-the-marketplace-xss-and-sqli.md)
 * [33 - NAX \[npiet\]](33-nax-npiet.md)
-* [34 - Mindgames](34-mindgames.md)
+* [34 - Mindgames (getcapabilities exploitation)](34-mindgames-getcapabilities-exploitation.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
 * [Copy of 32 -](copy-of-32-2.md)
