@@ -1,6 +1,6 @@
 # Copy of 32 -
 
-Room Link --> [https://tryhackme.com/room/nax](https://tryhackme.com/room/nax)
+Room Link --> [https://tryhackme.com/room/mindgames](https://tryhackme.com/room/mindgames)
 
 ### Enumeration
 
