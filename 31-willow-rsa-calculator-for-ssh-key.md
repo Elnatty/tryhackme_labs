@@ -1,4 +1,4 @@
-# 31 - Willow
+# 31 - Willow (RSA calculator for SSH key)
 
 Room Link --> [https://tryhackme.com/room/willow](https://tryhackme.com/room/willow)
 
@@ -25,7 +25,7 @@ Hey Willow, here's your SSH Private key -- you know where the decryption key is!
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 #### rpcbind enum \[111]
 
@@ -114,7 +114,7 @@ We use this **RSA Calculator** to decrypt the HEX values --> [https://www.cs.dre
 
 Just substitute the values in the appropiate box.
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 And we got the key.
 
