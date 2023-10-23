@@ -34,7 +34,7 @@
 * [32 - The Marketplace (XSS and SQLi)](32-the-marketplace-xss-and-sqli.md)
 * [33 - NAX \[npiet\]](33-nax-npiet.md)
 * [34 - Mindgames (getcapabilities exploitation)](34-mindgames-getcapabilities-exploitation.md)
-* [35 - Anonymous](35-anonymous.md)
+* [35 - Anonymous (ltrace / strace) to enumerate SUID binaries](35-anonymous-ltrace-strace-to-enumerate-suid-binaries.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
 * [Copy of 32 -](copy-of-32-2.md)
