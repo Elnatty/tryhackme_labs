@@ -35,6 +35,7 @@
 * [33 - NAX \[npiet\]](33-nax-npiet.md)
 * [34 - Mindgames (getcapabilities exploitation)](34-mindgames-getcapabilities-exploitation.md)
 * [35 - Anonymous (ltrace / strace) to enumerate SUID binaries](35-anonymous-ltrace-strace-to-enumerate-suid-binaries.md)
+* [36 - Wonderland (sudo and suid exploitation)](36-wonderland-sudo-and-suid-exploitation.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
 * [Copy of 32 -](copy-of-32-2.md)
@@ -55,4 +56,3 @@
 * [Copy of 32 -](copy-of-32-17.md)
 * [Copy of 32 -](copy-of-32-18.md)
 * [Copy of 32 -](copy-of-32-19.md)
-* [Copy of 32 -](copy-of-32-20.md)
