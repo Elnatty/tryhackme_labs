@@ -40,6 +40,7 @@
 * [38 - Develpy (python input function exploitation)](38-develpy-python-input-function-exploitation.md)
 * [39 - CMesS (subdomain enum) (tar \* exploitation)](39-cmess-subdomain-enum-tar-exploitation.md)
 * [40 - Dogcat (LFI exploit via Log Poisoning)](40-dogcat-lfi-exploit-via-log-poisoning.md)
+* [41 - ConvertMyVideo (CMD Injection exploit) \[pspy64 for priv esc\]](41-convertmyvideo-cmd-injection-exploit-pspy64-for-priv-esc.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
 * [Copy of 32 -](copy-of-32-2.md)
@@ -55,4 +56,3 @@
 * [Copy of 32 -](copy-of-32-12.md)
 * [Copy of 32 -](copy-of-32-13.md)
 * [Copy of 32 -](copy-of-32-14.md)
-* [Copy of 32 -](copy-of-32-15.md)
