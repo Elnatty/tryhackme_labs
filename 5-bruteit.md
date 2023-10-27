@@ -34,7 +34,7 @@ From the developers option we craft our hydra payload.
 
 <figure><img src=".gitbook/assets/Screenshot_20230901_085820.png" alt=""><figcaption><p>POST data values</p></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (7) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>grep keyword</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>grep keyword</p></figcaption></figure>
 
 Our payload will now be:
 
@@ -44,7 +44,7 @@ hydra -l admin -P /usr/share/wordlists/rockyou.txt 10.10.43.114 http-post-form "
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (8) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (8) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Login with credentials:
 
@@ -52,7 +52,7 @@ Login with credentials:
 
 There's an SSH private key on the page, after downloading it, and trying to use it to login with "john" as username to SSH, it requested for a key.
 
-<figure><img src=".gitbook/assets/image (9) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (9) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We can use "ssh2john" to crack it.
 
@@ -66,7 +66,7 @@ john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (10) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (10) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We can login to SSH now:
 

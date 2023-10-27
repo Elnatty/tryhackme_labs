@@ -66,11 +66,11 @@ cd /mnt/thm && ls -al
 # and we see all the shares available.
 ```
 
-<figure><img src=".gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (9) (1).png" alt=""><figcaption></figcaption></figure>
 
 We see "redis"dir, and it contains password for Redis authentication.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Now we  can authenticate to the redis server. `B65Hx562F@ggAZ@F` .
 
@@ -81,7 +81,7 @@ AUTH B65Hx562F@ggAZ@F
 # and we are logged in redis.
 ```
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 There are 5 keys in the keyspace from the results.
 
@@ -95,7 +95,7 @@ GET "internal flag" # view the key.
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 And we got the 2nd flag.
 
@@ -115,7 +115,7 @@ We found that `authlist` is a list type key and to read it's value we can run th
 # and we find 3 more items in the list.
 ```
 
-<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Decoding the base64 value:
 
@@ -222,7 +222,7 @@ ssh -L 127.0.0.1:9999:127.0.0.1:8111 -i ~/.ssh/id_rsa sys-internal@10.10.172.210
 
 Then we can access it via "127.0.0.1:9999" in firefox.
 
-<figure><img src=".gitbook/assets/image (5) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 There is a message:
 
@@ -267,7 +267,7 @@ Now navigate to BuildSteps -> Add build step. Now add the details as shown in th
 
 Now click save and then run, go back to the user shell and check the permissions of `/bin/bash,` now it should be an SUID binary.
 
-<figure><img src=".gitbook/assets/image (6) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Done.
 
