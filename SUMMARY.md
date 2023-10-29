@@ -42,6 +42,7 @@
 * [40 - Dogcat (LFI exploit via Log Poisoning)](40-dogcat-lfi-exploit-via-log-poisoning.md)
 * [41 - ConvertMyVideo (CMD Injection exploit) \[pspy64 for priv esc\]](41-convertmyvideo-cmd-injection-exploit-pspy64-for-priv-esc.md)
 * [42 - Revenge (MySQL Injection)](42-revenge-mysql-injection.md)
+* [43 - Harder](43-harder.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
 * [Copy of 32 -](copy-of-32-2.md)
@@ -55,4 +56,3 @@
 * [Copy of 32 -](copy-of-32-10.md)
 * [Copy of 32 -](copy-of-32-11.md)
 * [Copy of 32 -](copy-of-32-12.md)
-* [Copy of 32 -](copy-of-32-13.md)
