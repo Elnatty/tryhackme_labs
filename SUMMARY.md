@@ -46,7 +46,7 @@
 * [44 - HaskHell (flask env variable for priv esc)](44-haskhell-flask-env-variable-for-priv-esc.md)
 * [45 - Undiscovered (NFS, capabilities\[vim.basic exploitation\])](45-undiscovered-nfs-capabilities-vim.basic-exploitation.md)
 * [46 - Break Out The Cage (steganography, vigenear cipher, python)](46-break-out-the-cage-steganography-vigenear-cipher-python.md)
-* [4](4.md)
+* [47 -The Great Escape (SSRF exploitation, CMD injection, GIT exploitation, Docker Exploitation)](47-the-great-escape-ssrf-exploitation-cmd-injection-git-exploitation-docker-exploitation.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
 * [Copy of 32 -](copy-of-32-2.md)
