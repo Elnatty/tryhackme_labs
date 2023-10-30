@@ -44,6 +44,7 @@
 * [42 - Revenge (MySQL Injection)](42-revenge-mysql-injection.md)
 * [43 - Harder (php code review & cmd injection)](43-harder-php-code-review-and-cmd-injection.md)
 * [44 - HaskHell (flask env variable for priv esc)](44-haskhell-flask-env-variable-for-priv-esc.md)
+* [45 - Undiscovered (NFS, capabilities\[vim.basic exploitation\])](45-undiscovered-nfs-capabilities-vim.basic-exploitation.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
 * [Copy of 32 -](copy-of-32-2.md)
@@ -55,4 +56,3 @@
 * [Copy of 32 -](copy-of-32-8.md)
 * [Copy of 32 -](copy-of-32-9.md)
 * [Copy of 32 -](copy-of-32-10.md)
-* [Copy of 32 -](copy-of-32-11.md)
