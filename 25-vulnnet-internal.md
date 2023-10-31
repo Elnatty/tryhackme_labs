@@ -70,7 +70,7 @@ cd /mnt/thm && ls -al
 
 We see "redis"dir, and it contains password for Redis authentication.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Now we  can authenticate to the redis server. `B65Hx562F@ggAZ@F` .
 

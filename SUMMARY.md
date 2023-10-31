@@ -47,6 +47,7 @@
 * [45 - Undiscovered (NFS, capabilities\[vim.basic exploitation\])](45-undiscovered-nfs-capabilities-vim.basic-exploitation.md)
 * [46 - Break Out The Cage (steganography, vigenear cipher, python)](46-break-out-the-cage-steganography-vigenear-cipher-python.md)
 * [47 -The Great Escape (SSRF exploitation, CMD injection, GIT exploitation, Docker Exploitation)](47-the-great-escape-ssrf-exploitation-cmd-injection-git-exploitation-docker-exploitation.md)
+* [48 - Looking Glass](48-looking-glass.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
 * [Copy of 32 -](copy-of-32-2.md)
@@ -55,4 +56,3 @@
 * [Copy of 32 -](copy-of-32-5.md)
 * [Copy of 32 -](copy-of-32-6.md)
 * [Copy of 32 -](copy-of-32-7.md)
-* [Copy of 32 -](copy-of-32-8.md)

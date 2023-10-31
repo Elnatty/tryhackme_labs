@@ -41,7 +41,7 @@ IPC$         NO ACCESS	  IPC Service (blog server (Samba, Ubuntu))
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The images from the SMB file share were deadends, so since we have 2 usernames we can use wpscan to bruteforce for their login passwords.
 
