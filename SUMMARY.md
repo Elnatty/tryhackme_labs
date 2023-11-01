@@ -49,7 +49,7 @@
 * [47 -The Great Escape (SSRF exploitation, CMD injection, GIT exploitation, Docker Exploitation)](47-the-great-escape-ssrf-exploitation-cmd-injection-git-exploitation-docker-exploitation.md)
 * [48 - Looking Glass (sudoer's file rules for users)](48-looking-glass-sudoers-file-rules-for-users.md)
 * [49 - Recovery (Malware Analysis)](49-recovery-malware-analysis.md)
-* [50 -](50.md)
+* [50 - Relevant (windows SeImpersonateToken priv esc)](50-relevant-windows-seimpersonatetoken-priv-esc.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
 * [Copy of 32 -](copy-of-32-2.md)
