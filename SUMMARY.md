@@ -1,6 +1,7 @@
 # Table of contents
 
-* [tyhackme Tricks](README.md)
+* [Reverse Shells](README.md)
+* [tyhackme Tricks](<README (2).md>)
 * [1 - UltraTech](<README (1).md>)
 * [2 - Python Playground](2-python-playground.md)
 * [3 - Intro pOc Scripting](3-intro-poc-scripting.md)
@@ -53,6 +54,5 @@
 * [51 - Ghizer (java-rmi/java rmi, JDWP Debug Port exploitation)](51-ghizer-java-rmi-java-rmi-jdwp-debug-port-exploitation.md)
 * [52 - WWBuddy (second order sql injection, env variables exploitation)](52-wwbuddy-second-order-sql-injection-env-variables-exploitation.md)
 * [53 - The Blob Blog (Port Knocking, Reverse Engineering, C)](53-the-blob-blog-port-knocking-reverse-engineering-c.md)
-* [Reverse Shells / Shells](reverse-shells-shells.md)
 * [Copy of 32 -](copy-of-32.md)
 * [Copy of 32 -](copy-of-32-1.md)
