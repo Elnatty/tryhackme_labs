@@ -14,11 +14,11 @@ Open ports are 21 FTP, 22 SSH and 80 HTTP
 
 #### FTP enum
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The file contains some base64 encoded text, after decoding it, i pasted it in this site
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Decode it using:
 
@@ -44,11 +44,11 @@ gobuster dir -u http://10.10.74.166 -w /usr/share/dirbuster/wordlists/directory-
 
 Navigating to /aauditions we see a .mp3 file. Then run sonic-visualizer on it.
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We get the key for the Vigenear cipher. `namelesstwo`
 
-<figure><img src=".gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Site to [decode](https://www.boxentriq.com/code-breaking/vigenere-cipher)
 
@@ -67,13 +67,13 @@ We get the pasword for Weston.
 
 We can ssh in to his account.
 
-<figure><img src=".gitbook/assets/image (4) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Priv Esc
 
 `sudo -l` -  We can execute a cmd as root.
 
-<figure><img src=".gitbook/assets/image (5) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ```
 weston@national-treasure:~$ sudo /usr/bin/bees
@@ -164,11 +164,11 @@ The online cipher identifier tools mentioned earlier were not able to identify t
 
 We get root pssword.
 
-<figure><img src=".gitbook/assets/image (6) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 `Su root` .
 
-<figure><img src=".gitbook/assets/image (7) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Done !
 
