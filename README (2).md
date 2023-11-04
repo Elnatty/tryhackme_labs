@@ -1,5 +1,13 @@
 # tyhackme Tricks
 
+## <mark style="color:red;">A Repo with almost all the THM rooms</mark>
+
+{% embed url="https://gitlab.com/dhiksec/tryhackme" %}
+must checkout
+{% endembed %}
+
+
+
 ### tryhackme vpn tips
 
 {% code overflow="wrap" lineNumbers="true" %}
@@ -203,6 +211,7 @@ challenges
 ```bash
 # There are many tools used to view embedded files or text on Images.
 # Some are:
+0. stegseek (bruteforcer).
 1. xxd img.png
 2. strings img.pg
 3. binwalk -e img.png

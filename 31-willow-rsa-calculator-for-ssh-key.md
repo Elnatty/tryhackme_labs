@@ -114,7 +114,7 @@ We use this **RSA Calculator** to decrypt the HEX values --> [https://www.cs.dre
 
 Just substitute the values in the appropiate box.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 And we got the key.
 

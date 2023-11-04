@@ -55,4 +55,4 @@
 * [52 - WWBuddy (second order sql injection, env variables exploitation)](52-wwbuddy-second-order-sql-injection-env-variables-exploitation.md)
 * [53 - The Blob Blog (Port Knocking, Reverse Engineering, C)](53-the-blob-blog-port-knocking-reverse-engineering-c.md)
 * [54 - Cooctus Stories (C, umount exploitation)](54-cooctus-stories-c-umount-exploitation.md)
-* [Copy of 32 -](copy-of-32.md)
+* [55 - One Piece](55-one-piece.md)

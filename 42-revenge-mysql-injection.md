@@ -19,7 +19,7 @@ If you navigate to a page that dosen't exist, it displays an error.&#x20;
 
 `http://10.10.157.23/products/5 UNION SELECT 1,2,3,4,5,6,7,8-- -` - there are 8 columns, if you enter `9` you get an error, and again we see that both columns 8 and 2 are visible so we can output our queries from either of them.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Current User of the DB
 
