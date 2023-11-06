@@ -1,4 +1,4 @@
-# NerdHerd
+# 56 - NerdHerd
 
 Room Link --> [https://tryhackme.com/room/nerdherd](https://tryhackme.com/room/nerdherd)
 
@@ -32,7 +32,7 @@ all you need is in the leet
 
 `exiftool youfoundme.png` -&#x20;
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 Googling the cipher `fijbxslz` and saw that is was a vigenere cipher. We need a key.
 
@@ -62,7 +62,7 @@ Finally it’s fully decoded! Now I’ve got another hint `easypass` .
 
 We don't have access to any of the file shares.
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
 Lets try enum4linux:
 
@@ -71,7 +71,7 @@ Lets try enum4linux:
 └─$ enum4linux 10.10.158.77
 ```
 
-<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 A username `chuk` .
 
@@ -87,7 +87,7 @@ gobuster dir -u http://10.10.158.77:1337 -w /usr/share/dirbuster/wordlists/direc
 
 Going to `/admin` and got some encoded ciphers.
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ```bash
 Y2liYXJ0b3dza2k= : aGVoZWdvdTwdasddHlvdQ==

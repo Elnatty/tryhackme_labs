@@ -79,7 +79,7 @@ We got a `cool.jpeg` image from the ftp server.
 
 Navigating to `10.10.42.235:445` we get anothere password:
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 `bob : p@55w0rd` .
 
@@ -107,7 +107,7 @@ Navigating to: `http://10.10.42.235:445/bobs_safe_for_stuff`&#x20;
 youmayenter
 ```
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 So to decrypt the Vigenere key i used this [site](https://www.dcode.fr/vigenere-cipher?\_\_r=1.3969e56e2ca584f2ba8e04297d1a0c6e) and `youmayenter` as the key.
 
@@ -130,7 +130,7 @@ Navigating the link: `http://10.10.42.235:445/user`
 
 We get a ssh priv key, probably for bob.
 
-<figure><img src=".gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The key was outputing some kind of error, so i moved on. Enumerating port `8080` .
 
