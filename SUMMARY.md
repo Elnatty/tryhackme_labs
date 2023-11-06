@@ -58,7 +58,7 @@
 * [55 - toc2 (race condition exploitation)](55-toc2-race-condition-exploitation.md)
 * [56 - NerdHerd](56-nerdherd.md)
 * [57 - The Server from Hell](57-the-server-from-hell.md)
+* [58 - JacobTheBoss (jboss exploitation)](58-jacobtheboss-jboss-exploitation.md)
 * [Copy of NerdHerd](copy-of-nerdherd.md)
 * [Copy of NerdHerd](copy-of-nerdherd-1.md)
 * [Copy of NerdHerd](copy-of-nerdherd-2.md)
-* [Copy of NerdHerd](copy-of-nerdherd-3.md)
