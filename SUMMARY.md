@@ -61,4 +61,4 @@
 * [58 - JacobTheBoss (jboss exploitation)](58-jacobtheboss-jboss-exploitation.md)
 * [59 - Unbaked Pie (Python Serialization exploit, PYTHONPATH env variable exploit)](59-unbaked-pie-python-serialization-exploit-pythonpath-env-variable-exploit.md)
 * [60 - Bookstore (API parameter fuzzing, LFI, XOR binary exploitation)](60-bookstore-api-parameter-fuzzing-lfi-xor-binary-exploitation.md)
-* [Copy of NerdHerd](copy-of-nerdherd.md)
+* [61 - Overpass 3 - Hosting (GPG, no\_root\_squash exploitation)](61-overpass-3-hosting-gpg-no\_root\_squash-exploitation.md)
