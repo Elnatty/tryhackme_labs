@@ -60,5 +60,5 @@
 * [57 - The Server from Hell](57-the-server-from-hell.md)
 * [58 - JacobTheBoss (jboss exploitation)](58-jacobtheboss-jboss-exploitation.md)
 * [59 - Unbaked Pie (Python Serialization exploit, PYTHONPATH env variable exploit)](59-unbaked-pie-python-serialization-exploit-pythonpath-env-variable-exploit.md)
+* [60 - Bookstore (API parameter fuzzing, LFI, XOR binary exploitation)](60-bookstore-api-parameter-fuzzing-lfi-xor-binary-exploitation.md)
 * [Copy of NerdHerd](copy-of-nerdherd.md)
-* [Copy of NerdHerd](copy-of-nerdherd-1.md)
