@@ -64,7 +64,7 @@
 * [61 - Overpass 3 - Hosting (GPG, no\_root\_squash exploitation)](61-overpass-3-hosting-gpg-no\_root\_squash-exploitation.md)
 * [62 - Battery (Ghidra, SQLI Truncation attack, XML/XXE attack)](62-battery-ghidra-sqli-truncation-attack-xml-xxe-attack.md)
 * [63 - Madeye's Castle (sqlite injection)](63-madeyes-castle-sqlite-injection.md)
-* [Page 3](page-3.md)
+* [64 - En-pass (403 bypass)](64-en-pass-403-bypass.md)
 * [Page 4](page-4.md)
 * [Page 5](page-5.md)
 * [Page 6](page-6.md)
