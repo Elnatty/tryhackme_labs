@@ -63,7 +63,7 @@
 * [60 - Bookstore (API parameter fuzzing, LFI, XOR binary exploitation)](60-bookstore-api-parameter-fuzzing-lfi-xor-binary-exploitation.md)
 * [61 - Overpass 3 - Hosting (GPG, no\_root\_squash exploitation)](61-overpass-3-hosting-gpg-no\_root\_squash-exploitation.md)
 * [62 - Battery (Ghidra, SQLI Truncation attack, XML/XXE attack)](62-battery-ghidra-sqli-truncation-attack-xml-xxe-attack.md)
-* [Page 2](page-2.md)
+* [63 - Madeye's Castle (sqlite injection)](63-madeyes-castle-sqlite-injection.md)
 * [Page 3](page-3.md)
 * [Page 4](page-4.md)
 * [Page 5](page-5.md)
