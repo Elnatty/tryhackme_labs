@@ -945,7 +945,7 @@ for i in $(seq 1 100);do echo "[+] PORT $i\n$(nc 10.10.123.249 $i)\n\n==========
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We check out port 12345                                                                                                        &#x20;
 
@@ -1035,7 +1035,7 @@ for i in range(2500, 4500):
 s.close()
 ```
 
-<figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Initial Access
 

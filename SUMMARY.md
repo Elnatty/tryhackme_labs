@@ -65,7 +65,7 @@
 * [62 - Battery (Ghidra, SQLI Truncation attack, XML/XXE attack)](62-battery-ghidra-sqli-truncation-attack-xml-xxe-attack.md)
 * [63 - Madeye's Castle (sqlite injection)](63-madeyes-castle-sqlite-injection.md)
 * [64 - En-pass (403 bypass)](64-en-pass-403-bypass.md)
-* [Page 4](page-4.md)
+* [65 - Sustah (Http Rate Limit Bypass)](65-sustah-http-rate-limit-bypass.md)
 * [Page 5](page-5.md)
 * [Page 6](page-6.md)
 * [Page 7](page-7.md)

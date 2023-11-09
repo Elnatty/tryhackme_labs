@@ -18,7 +18,7 @@ PORT    STATE SERVICE     REASON  VERSION
 
 _In order to get the blog to work with AWS, you'll need to add "blog.thm" to your /etc/hosts file._
 
-<figure><img src=".gitbook/assets/image (5) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Checking the Page source code we get 2 usernames : Billy and his Mom.
 
@@ -41,7 +41,7 @@ IPC$         NO ACCESS	  IPC Service (blog server (Samba, Ubuntu))
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The images from the SMB file share were deadends, so since we have 2 usernames we can use wpscan to bruteforce for their login passwords.
 
@@ -61,7 +61,7 @@ the WPScan was able to extract the credentials for the user kwheel. It was cutie
 
 Login to  wordpress. `version 5.0` .
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Initial Access
 
@@ -71,7 +71,7 @@ There is an [exploit](https://www.exploit-db.com/exploits/49512) for uploading i
 
 `use exploit/multi/http/wp_crop_rce`&#x20;
 
-<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Priv Esc
 
@@ -81,7 +81,7 @@ There is an [exploit](https://www.exploit-db.com/exploits/49512) for uploading i
 
 Running `strings /usr/sbin/checker` - and we see it is executing `/bin/bash`.&#x20;
 
-<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Running the file informs us that we are not admin users.
 
