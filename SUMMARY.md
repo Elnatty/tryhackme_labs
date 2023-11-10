@@ -67,7 +67,7 @@
 * [64 - En-pass (403 bypass)](64-en-pass-403-bypass.md)
 * [65 - Sustah (Http Rate Limit Bypass)](65-sustah-http-rate-limit-bypass.md)
 * [66 - Tokyo Ghoul (LFI, python jail break exploitation)](66-tokyo-ghoul-lfi-python-jail-break-exploitation.md)
-* [Page 6](page-6.md)
+* [67 - Watcher (LFI RCE, Python custom library hacking)](67-watcher-lfi-rce-python-custom-library-hacking.md)
 * [Page 7](page-7.md)
 * [Page 8](page-8.md)
 * [Page 9](page-9.md)
