@@ -241,6 +241,14 @@ hexeditor image.png
 ```
 {% endcode %}
 
+### OSINT Tools
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+Spiderfoot (github)
+```
+{% endcode %}
+
 ### Gobuster / FFUF / dirsearch
 
 {% code overflow="wrap" lineNumbers="true" %}
