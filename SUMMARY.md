@@ -69,5 +69,5 @@
 * [66 - Tokyo Ghoul (LFI, python jail break exploitation)](66-tokyo-ghoul-lfi-python-jail-break-exploitation.md)
 * [67 - Watcher (LFI RCE, Python custom library hacking)](67-watcher-lfi-rce-python-custom-library-hacking.md)
 * [68 - Broker (ActiveMQ / mqtt exploitation)](68-broker-activemq-mqtt-exploitation.md)
-* [Page 8](page-8.md)
+* [69 - Inferno](69-inferno.md)
 * [Page 9](page-9.md)

