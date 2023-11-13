@@ -70,4 +70,4 @@
 * [67 - Watcher (LFI RCE, Python custom library hacking)](67-watcher-lfi-rce-python-custom-library-hacking.md)
 * [68 - Broker (ActiveMQ / mqtt exploitation)](68-broker-activemq-mqtt-exploitation.md)
 * [69 - Inferno](69-inferno.md)
-* [Page 9](page-9.md)
+* [70 - VulnNet dotpy (SSTI / SSTI Bypass)](70-vulnnet-dotpy-ssti-ssti-bypass.md)
