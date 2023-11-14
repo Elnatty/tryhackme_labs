@@ -315,7 +315,7 @@ SITE CPTO /var/tmp/id_rsa # copy to NFS /var share.
 hashcat -m 1710 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
 ```
 
-### Add root user to /etc/passwd file
+### /etcAdd root user to /etc/passwd file
 
 {% code overflow="wrap" %}
 ```bash
