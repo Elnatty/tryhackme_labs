@@ -73,13 +73,13 @@ nmap -Pn -n -v 10.10.81.199 -sV
 
 We login FTP with `bob` credentials successfully.
 
-<figure><img src=".gitbook/assets/image (9) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (9) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We got a `cool.jpeg` image from the ftp server.
 
 Navigating to `10.10.42.235:445` we get anothere password:
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 `bob : p@55w0rd` .
 
@@ -107,11 +107,11 @@ Navigating to: `http://10.10.42.235:445/bobs_safe_for_stuff`&#x20;
 youmayenter
 ```
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 So to decrypt the Vigenere key i used this [site](https://www.dcode.fr/vigenere-cipher?\_\_r=1.3969e56e2ca584f2ba8e04297d1a0c6e) and `youmayenter` as the key.
 
-<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Decoded ciper --> `bob:d1ff3r3ntP@55w0rd` .
 
@@ -130,7 +130,7 @@ Navigating the link: `http://10.10.42.235:445/user`
 
 We get a ssh priv key, probably for bob.
 
-<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The key was outputing some kind of error, so i moved on. Enumerating port `8080` .
 
@@ -149,15 +149,15 @@ The key was outputing some kind of error, so i moved on. Enumerating port `8080`
 
 All redirects to `/login` . Now trying the new credential we found  `bob : d1ff3r3ntP@55w0rd`
 
-<figure><img src=".gitbook/assets/image (5) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 I clicked all links, wanted to try parameter bruteforce but then i tried to enter a cmd, and since whatever we enter is been outputed in the `/review` dir, i discovered we have RCE.
 
-<figure><img src=".gitbook/assets/image (6) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 I used this to get Reverse shell.
 
-<figure><img src=".gitbook/assets/image (7) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Priv Esc to bobloblaw
 
@@ -253,9 +253,9 @@ int main(void){
 
 Setup NC listener and replace the file. And i got root.
 
-<figure><img src=".gitbook/assets/image (8) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (8) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (9) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (9) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Done!
 

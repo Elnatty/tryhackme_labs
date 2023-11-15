@@ -75,7 +75,7 @@
 * [72 - VulnNet dotjar (Ghostcat exploit, Java app exploitation)](72-vulnnet-dotjar-ghostcat-exploit-java-app-exploitation.md)
 * [73 - VulnNet Endgame (SQLI, Getcap, Adding user and password to /etc/passwd file)](73-vulnnet-endgame-sqli-getcap-adding-user-and-password-to-etc-passwd-file.md)
 * [74 - -Wekor (MySQLI, Wordpress, memcached, exploiting Directory permissions to get root)](74-wekor-mysqli-wordpress-memcached-exploiting-directory-permissions-to-get-root.md)
-* [Page 5](page-5.md)
+* [75 - Pylon (Steganograpgh, GIT, gpg, exploiting openvpn file to gain root)](75-pylon-steganograpgh-git-gpg-exploiting-openvpn-file-to-gain-root.md)
 * [Page 6](page-6.md)
 * [Page 7](page-7.md)
 * [Page 8](page-8.md)
