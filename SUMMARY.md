@@ -76,7 +76,7 @@
 * [73 - VulnNet Endgame (SQLI, Getcap, Adding user and password to /etc/passwd file)](73-vulnnet-endgame-sqli-getcap-adding-user-and-password-to-etc-passwd-file.md)
 * [74 - -Wekor (MySQLI, Wordpress, memcached, exploiting Directory permissions to get root)](74-wekor-mysqli-wordpress-memcached-exploiting-directory-permissions-to-get-root.md)
 * [75 - Pylon (Steganograpgh, GIT, gpg, exploiting openvpn file to gain root)](75-pylon-steganograpgh-git-gpg-exploiting-openvpn-file-to-gain-root.md)
-* [Page 6](page-6.md)
+* [76 - SafeZone (LFI Log Poisoning, SSH Tunneling)](76-safezone-lfi-log-poisoning-ssh-tunneling.md)
 * [Page 7](page-7.md)
 * [Page 8](page-8.md)
 * [Page 9](page-9.md)

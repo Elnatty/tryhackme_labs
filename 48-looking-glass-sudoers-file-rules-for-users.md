@@ -190,7 +190,7 @@ b9776d7ddf459c9ad5b0e1d6ac61e27befb5e99fd62446677600d7cacef544d0
 
 I just paste them into cyberchef and convert from Hex.
 
-<figure><img src=".gitbook/assets/image (19).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (19) (1).png" alt=""><figcaption></figcaption></figure>
 
 `humptydumpty : zyxwvutsrqponmlk` .
 
