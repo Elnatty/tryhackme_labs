@@ -78,6 +78,6 @@
 * [75 - Pylon (Steganograpgh, GIT, gpg, exploiting openvpn file to gain root)](75-pylon-steganograpgh-git-gpg-exploiting-openvpn-file-to-gain-root.md)
 * [76 - SafeZone (LFI Log Poisoning, SSH Tunneling)](76-safezone-lfi-log-poisoning-ssh-tunneling.md)
 * [77 - NahamStore](77-nahamstore.md)
-* [78 - Sweettooth Inc.](78-sweettooth-inc..md)
+* [78 - Sweettooth Inc. (InfluxDB exploitation, SSH Tunneling, Docker Exploitation and Escape)](78-sweettooth-inc.-influxdb-exploitation-ssh-tunneling-docker-exploitation-and-escape.md)
 * [Page 9](page-9.md)
 * [Page 10](page-10.md)
