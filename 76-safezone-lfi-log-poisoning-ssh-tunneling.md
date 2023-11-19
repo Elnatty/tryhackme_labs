@@ -33,11 +33,11 @@ gobuster dir -u http://10.10.90.206 -w /usr/share/dirb/wordlists/common.txt -x t
 
 Navigating to `index.php` .
 
-<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Trying default credentials like admin, password, etc but it seems there is rate limiting.
 
-<figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Checking `/note.txt` .
 

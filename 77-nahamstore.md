@@ -172,13 +172,13 @@ _Let us visit any URL which is not on the website. For example **http://nahamsto
 
 _The **URL** redirected us to the below page._
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 Doing this gives us XSS
 
 [http://nahamstore.thm/\<script>alert(123)\</script](http://nahamstore.thm/%3Cscript%3Ealert\(123\)%3C/script%3E)>
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 
 

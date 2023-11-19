@@ -69,7 +69,7 @@ The page is using a Basic authentication
 
 We can try to view the file that stores credentials for Basic Authentication on Ubuntu Apache, ie the `htpasswd` file. Located at `/etc/apache2/.htpasswd`&#x20;
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Reading the file and we see a credential:
 
