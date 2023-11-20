@@ -553,11 +553,11 @@ dr-xr-xr-x  13 root root    0 Sep 24 14:33 sys
 
 It seems a text with some words, so key should be one of those words, you can use the brute force to solve it, but I guess the key is **`root`** at first time and it is right :). Also before use the CyberChef you need to use the hex() function in python to transform the key in **`secret.txt`**.
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 Well again, the output **`1109200013XX`** is not the key of the **`flag2.txt`** . You need to test all the number from **`00–99`** of the last two digits. Here is the final answer, the right key is **`110920001386` .**
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ```
 THM{cronjobs_F1Le_iNPu7_cURL_4re_5c4ry_Wh3N_C0mb1n3d_t0g3THeR}
