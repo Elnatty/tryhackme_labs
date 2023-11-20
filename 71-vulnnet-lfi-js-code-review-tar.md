@@ -65,11 +65,11 @@ Back to the [http://broadcast.vulnnet.thm/](http://broadcast.vulnnet.thm/)
 
 The page is using a Basic authentication
 
-<figure><img src=".gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We can try to view the file that stores credentials for Basic Authentication on Ubuntu Apache, ie the `htpasswd` file. Located at `/etc/apache2/.htpasswd`&#x20;
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Reading the file and we see a credential:
 
@@ -79,7 +79,7 @@ Cracking with John.
 
 Cracked --> `developers :  9972761drmfsls` .
 
-<figure><img src=".gitbook/assets/image (4) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Poceed to login to the page. And got a `Clipbucket CMS` .
 
@@ -99,13 +99,13 @@ creating file{"success":"yes","file_name":"169989120868ca6d","extension":"php","
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (5) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We naviigate to [http://broadcast.vulnnet.thm/actions/](http://broadcast.vulnnet.thm/actions/) There is a `CB_BEATS_UPLOAD_DIR`
 
 We execute it and get shell.
 
-<figure><img src=".gitbook/assets/image (6) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Priv Esc to Server-management user
 
@@ -119,7 +119,7 @@ There is a backup folder in the /var dir with some .gz files with Read privs on 
 
 After untaring the file there is a `id_rsa` file.
 
-<figure><img src=".gitbook/assets/image (7) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ```
 -----BEGIN RSA PRIVATE KEY-----
@@ -169,7 +169,7 @@ Adnd am logged in.
 
 There is a cronjob running as root every 2 minutes.
 
-<figure><img src=".gitbook/assets/image (8) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (8) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ```bash
 server-management@vulnnet:/var/opt$ cat backupsrv.sh 

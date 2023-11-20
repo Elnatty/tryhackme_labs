@@ -178,11 +178,11 @@ We see a passwd file here, could be password file for the vnc server. Send it to
 
 Using LinPEAS
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
 
 * run this : `vncviewer -passwd passwd 10.10.28.162:5901`
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 And we get access to the VNC server.
 

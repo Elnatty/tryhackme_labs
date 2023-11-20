@@ -28,7 +28,7 @@ Use accesschk.exe to check the "user" account's permissions on the "daclsvc" ser
 
 `C:\PrivEsc\accesschk.exe /accepteula -uwcqve user daclsvc`
 
-<figure><img src=".gitbook/assets/image (11) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (11) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
 It shows the "user" account has the permission to change the service config (SERVICE\_CHANGE\_CONFIG).
 
@@ -36,7 +36,7 @@ Query the service and note that it runs with SYSTEM privileges (SERVICE\_START\_
 
 `sc qc daclsvc`
 
-<figure><img src=".gitbook/assets/image (12) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (12) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
 
 Checking if the service is running or stopped currently `sc query daclsvc`&#x20;
 

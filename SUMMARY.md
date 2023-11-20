@@ -81,6 +81,7 @@
 * [78 - Sweettooth Inc. (InfluxDB exploitation, SSH Tunneling, Docker Exploitation and Escape)](78-sweettooth-inc.-influxdb-exploitation-ssh-tunneling-docker-exploitation-and-escape.md)
 * [79 - CMSpit (CockPit CMS exploitation, MongoDB exploitation)](79-cmspit-cockpit-cms-exploitation-mongodb-exploitation.md)
 * [80 - Super-Spam (Cracking NTLMv2 hashes & Wifi Password, VNC password cracking and VNC session)](80-super-spam-cracking-ntlmv2-hashes-and-wifi-password-vnc-password-cracking-and-vnc-session.md)
+* [81 - Super Secret TIp (LFI, XOR password encryption & decryption, SSTI RCE and bypass)](81-super-secret-tip-lfi-xor-password-encryption-and-decryption-ssti-rce-and-bypass.md)
 * [Copy of Page 10](copy-of-page-10.md)
 * [Copy of Page 10](copy-of-page-10-1.md)
 * [Copy of Page 10](copy-of-page-10-2.md)
@@ -94,4 +95,3 @@
 * [Copy of Page 10](copy-of-page-10-10.md)
 * [Copy of Page 10](copy-of-page-10-11.md)
 * [Copy of Page 10](copy-of-page-10-12.md)
-* [Copy of Page 10](copy-of-page-10-13.md)
