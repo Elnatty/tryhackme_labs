@@ -84,6 +84,7 @@
 * [81 - Super Secret TIp (LFI, XOR password encryption & decryption, SSTI RCE and bypass)](81-super-secret-tip-lfi-xor-password-encryption-and-decryption-ssti-rce-and-bypass.md)
 * [82 - Templates (PUG Template exploitation \[SSTI\])](82-templates-pug-template-exploitation-ssti.md)
 * [83 - SSTI](83-ssti.md)
+* [84 - That's The Ticket (XSS, DNS Exfilteration with XSS, Bruteforce Http Login forms with FFUF)](84-thats-the-ticket-xss-dns-exfilteration-with-xss-bruteforce-http-login-forms-with-ffuf.md)
 * [Copy of Page 10](copy-of-page-10.md)
 * [Copy of Page 10](copy-of-page-10-1.md)
 * [Copy of Page 10](copy-of-page-10-2.md)
@@ -94,4 +95,3 @@
 * [Copy of Page 10](copy-of-page-10-7.md)
 * [Copy of Page 10](copy-of-page-10-8.md)
 * [Copy of Page 10](copy-of-page-10-9.md)
-* [Copy of Page 10](copy-of-page-10-10.md)
