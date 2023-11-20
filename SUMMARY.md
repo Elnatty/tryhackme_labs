@@ -82,6 +82,7 @@
 * [79 - CMSpit (CockPit CMS exploitation, MongoDB exploitation)](79-cmspit-cockpit-cms-exploitation-mongodb-exploitation.md)
 * [80 - Super-Spam (Cracking NTLMv2 hashes & Wifi Password, VNC password cracking and VNC session)](80-super-spam-cracking-ntlmv2-hashes-and-wifi-password-vnc-password-cracking-and-vnc-session.md)
 * [81 - Super Secret TIp (LFI, XOR password encryption & decryption, SSTI RCE and bypass)](81-super-secret-tip-lfi-xor-password-encryption-and-decryption-ssti-rce-and-bypass.md)
+* [82 - Templates (PUG Template exploitation \[SSTI\])](82-templates-pug-template-exploitation-ssti.md)
 * [Copy of Page 10](copy-of-page-10.md)
 * [Copy of Page 10](copy-of-page-10-1.md)
 * [Copy of Page 10](copy-of-page-10-2.md)
@@ -94,4 +95,3 @@
 * [Copy of Page 10](copy-of-page-10-9.md)
 * [Copy of Page 10](copy-of-page-10-10.md)
 * [Copy of Page 10](copy-of-page-10-11.md)
-* [Copy of Page 10](copy-of-page-10-12.md)
