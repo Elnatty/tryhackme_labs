@@ -87,7 +87,7 @@
 * [84 - That's The Ticket (XSS, DNS Exfilteration with XSS, Bruteforce Http Login forms with FFUF)](84-thats-the-ticket-xss-dns-exfilteration-with-xss-bruteforce-http-login-forms-with-ffuf.md)
 * [85 - Debug (PHP Serialization RCE)](85-debug-php-serialization-rce.md)
 * [86 - Red Stone One Carat (Restricted Shell Escape with RUBY)](86-red-stone-one-carat-restricted-shell-escape-with-ruby.md)
-* [Untitled](untitled.md)
+* [87 - ColdVVars (XPath Injection, TMUX eploitation)](87-coldvvars-xpath-injection-tmux-eploitation.md)
 * [Copy of Page 10](copy-of-page-10.md)
 * [Copy of Page 10](copy-of-page-10-1.md)
 * [Copy of Page 10](copy-of-page-10-2.md)
