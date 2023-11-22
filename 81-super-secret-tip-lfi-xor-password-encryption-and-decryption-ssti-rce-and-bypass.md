@@ -51,11 +51,11 @@ source
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We got a hit. This means we can download another file called `source.py` in the `/cloud` directory.
 
-<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Source Code
 
@@ -162,7 +162,7 @@ We can get lots of important information in it:
 
 We can go for those point one by one, first we try to down load the **`ip.py`** and **`debugpassword.py`** since those two file seems important. However, with the point 4, we can not download directly, so we can bypass using the "**NULLBYTE**" **`%00.txt`** . After that we get two python file.
 
-<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 <figure><img src="https://miro.medium.com/v2/resize:fit:602/1*GJQhBK0G6oaqeyglLjd8Tg.png" alt="" height="412" width="700"><figcaption></figcaption></figure>
 
@@ -553,11 +553,11 @@ dr-xr-xr-x  13 root root    0 Sep 24 14:33 sys
 
 It seems a text with some words, so key should be one of those words, you can use the brute force to solve it, but I guess the key is **`root`** at first time and it is right :). Also before use the CyberChef you need to use the hex() function in python to transform the key in **`secret.txt`**.
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Well again, the output **`1109200013XX`** is not the key of the **`flag2.txt`** . You need to test all the number from **`00–99`** of the last two digits. Here is the final answer, the right key is **`110920001386` .**
 
-<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ```
 THM{cronjobs_F1Le_iNPu7_cURL_4re_5c4ry_Wh3N_C0mb1n3d_t0g3THeR}

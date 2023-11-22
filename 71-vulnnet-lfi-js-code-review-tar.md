@@ -65,11 +65,11 @@ Back to the [http://broadcast.vulnnet.thm/](http://broadcast.vulnnet.thm/)
 
 The page is using a Basic authentication
 
-<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We can try to view the file that stores credentials for Basic Authentication on Ubuntu Apache, ie the `htpasswd` file. Located at `/etc/apache2/.htpasswd`&#x20;
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Reading the file and we see a credential:
 
@@ -79,7 +79,7 @@ Cracking with John.
 
 Cracked --> `developers :  9972761drmfsls` .
 
-<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Poceed to login to the page. And got a `Clipbucket CMS` .
 
