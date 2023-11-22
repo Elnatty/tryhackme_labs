@@ -87,7 +87,7 @@ gobuster dir -u http://10.10.158.77:1337 -w /usr/share/dirbuster/wordlists/direc
 
 Going to `/admin` and got some encoded ciphers.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ```bash
 Y2liYXJ0b3dza2k= : aGVoZWdvdTwdasddHlvdQ==

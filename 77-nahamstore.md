@@ -178,7 +178,7 @@ Doing this gives us XSS
 
 [http://nahamstore.thm/\<script>alert(123)\</script](http://nahamstore.thm/%3Cscript%3Ealert\(123\)%3C/script%3E)>
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 
 

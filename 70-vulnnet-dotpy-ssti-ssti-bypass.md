@@ -22,7 +22,7 @@ I noticed whenever i enter a non existent page it gets injected into the page.
 
 [http://10.10.82.145:8080/robots](http://10.10.82.145:8080/robots.txt)
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 And some characters are blackliisted.
 

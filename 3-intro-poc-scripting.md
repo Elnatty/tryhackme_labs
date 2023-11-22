@@ -240,7 +240,7 @@ And we have our invalid input function.
 
 There are numerous ways to execute the system shell on Linux as we have the freedom to execute any command that we want. In this scenario we will save steps and space by using `bash` to open a connection to the attacker and send the shell. [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#reverse-shell) lists the following examples:
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>6</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>6</p></figcaption></figure>
 
 The first command listed `bash -i` is a popular one line command to establish an interactive reverse shell on a system. This will be the basis for our payload() function but it does require some tweaks. While it executes a reverse shell, we are missing a key point. Without specifying what to do with the bash shell that executes on boot, the system is unable to distinguish between separate processes of bash. To fix this, we can use `bash -c 'exec bash -i xyz'`
 
