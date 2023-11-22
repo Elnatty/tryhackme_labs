@@ -33,11 +33,11 @@ gobuster dir -u http://10.10.90.206 -w /usr/share/dirb/wordlists/common.txt -x t
 
 Navigating to `index.php` .
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Trying default credentials like admin, password, etc but it seems there is rate limiting.
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Checking `/note.txt` .
 
@@ -49,15 +49,15 @@ I can't remember my password always , that's why I have saved it in /home/files/
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Create a new account in `/register.php` .
 
-<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 `/news.php`&#x20;
 
-<figure><img src=".gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 `/detail.php`&#x20;
 
@@ -65,7 +65,7 @@ Create a new account in `/register.php` .
 <!-- try to use "page" as GET parameter-->
 ```
 
-<figure><img src=".gitbook/assets/image (6) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We got a GET parameter to use, and remember the `/note.php` text we found too.
 
@@ -85,9 +85,9 @@ gobuster dir -e -u http://safezone.thm/ -t30 -w /usr/share/seclists/Discovery/We
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (7) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We got a hint for admin password.
 
@@ -156,7 +156,7 @@ So i used SecsList to Bruteforce for other sensitive files i can read, and i was
 
 So we intercept the request to read the apache log file and inject this to the User-agent field:
 
-<figure><img src=".gitbook/assets/image (9) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (9) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 So its working.
 

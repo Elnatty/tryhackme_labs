@@ -1,4 +1,4 @@
-# 65 - Sustah (Http Rate Limit Bypass)
+# 65 - Sustah (Http Rate Limit Bypass, RSYNC)
 
 Room Link --> [https://tryhackme.com/room/sustah](https://tryhackme.com/room/sustah)
 
@@ -60,13 +60,13 @@ X-Remote-Addr: 127.0.0.1
 
 They are gone now..
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 So forward the request to intruder to bruteforce the Numbers.
 
 The hint displayed \*\*\*\*\* 5 stars, so the logical move is to start from 10000.
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ```
 /YouGotTh3P@th
@@ -78,7 +78,7 @@ So this didn't work --> [http://10.10.212.70:8085/YouGotTh3P@th](http://10.10.21
 
 But this worked --> [http://10.10.212.70/YouGotTh3P@th/](http://10.10.212.70/YouGotTh3P@th/)
 
-<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 So Mara CMS. Googling the exploit for this CMS, and found an authenticated RCE exploit.
 
@@ -108,13 +108,13 @@ The default credentials worked: `admin : changeme` .
 
 Using this [exploit](https://www.exploit-db.com/exploits/48780)
 
-<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Files saved to: /var/www/html/YouGotTh3P@th/img
 
 So i navigated to : [http://10.10.212.70/YouGotTh3P@th/img/shell.php](http://10.10.212.70/YouGotTh3P@th/img/shell.php) and got shell.
 
-<figure><img src=".gitbook/assets/image (6) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The hint says look for backup files, there is a backups dir in /var, we found kiran password in a `.bak.passwd` .
 
