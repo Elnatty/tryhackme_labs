@@ -20,7 +20,7 @@ PORT    STATE SERVICE     REASON  VERSION
 
 We don't have access to the SMB shares.
 
-<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### RSYNC Enum
 
@@ -91,9 +91,9 @@ index.php
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We modify the value of  the `env` value in the webapp.ini file to `dev` from `prod` and send it using rsync.
 
@@ -105,7 +105,7 @@ dking@dking ~/Downloads/files$ rsync webapp.ini rsync://rsync-connect@10.10.136.
 
 And now we can access the `/admin` page.
 
-<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The room hint said SQL injection, so we can start checking from here.
 
@@ -118,7 +118,7 @@ The room hint said SQL injection, so we can start checking from here.
 tom" UNION SELECT NULL,NULL,NULL-- -
 ```
 
-<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### SQL Version
 
@@ -157,17 +157,17 @@ Navigate to [http://10.10.136.119/shell.php?cmd=id](http://10.10.136.119/shell.p
 
 And we get RCE.
 
-<figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
 
 From here it's easy to get reverse shell.
 
-<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Priv Esc to root
 
 Running LinPEAS on the machine:
 
-<figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7) (1).png" alt=""><figcaption></figcaption></figure>
 
 <figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
 
