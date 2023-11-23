@@ -91,7 +91,7 @@
 * [88 - Metamorphosis (RSYNC, SQLI to RCE, sniffing with tcpdump)](88-metamorphosis-rsync-sqli-to-rce-sniffing-with-tcpdump.md)
 * [89 - SQHell (SQLI types and exploitation)](89-sqhell-sqli-types-and-exploitation.md)
 * [90 - Fortress (decompile python code, SHA1 collisions)](90-fortress-decompile-python-code-sha1-collisions.md)
+* [91 - CyberCrafted (SQLI, eploiting Screen for priv esc)](91-cybercrafted-sqli-eploiting-screen-for-priv-esc.md)
 * [Copy of Page 10](copy-of-page-10.md)
 * [Copy of Page 10](copy-of-page-10-1.md)
 * [Copy of Page 10](copy-of-page-10-2.md)
-* [Copy of Page 10](copy-of-page-10-3.md)
