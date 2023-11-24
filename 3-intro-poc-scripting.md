@@ -16,7 +16,7 @@ The source code can be broken up into three main functions; initialize, check an
 
 ### Initialize
 
-<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>1</p></figcaption></figure>
 
 There are a few simple parameters to take note of in the `update_info` function that we might need to consider converting.
 
@@ -40,7 +40,7 @@ Other information such as memory allocation is done automatically when using pyt
 
 ### Check
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>2</p></figcaption></figure>
 
 The purpose of this function is to verify that the target is vulnerable to CVE-2012-2982. As this function only exists to verify the vulnerability, it is expendable in our custom script. Let's breakdown this function line by line (I'll be skipping the print statements).
 
@@ -56,7 +56,7 @@ The beginning portion of this function establishes the flow of the rest of the s
 
 Here we simply have elements of a POST request, the login page, test cookie, and credentials. We know we need authenticated credentials in order to use this exploit, the POST request logs us in and assigns us a unique cookie to verify our local access privileges on the target and communicate as if we had a graphical interface. In fact, we can use the developer tools in our browser to verify the information.
 
-<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>3</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>3</p></figcaption></figure>
 
 We can verify the contents of the POST request, the login data _page=%2F\&user=user1\&pass=1user_ (%2F is [an equivalent](https://www.w3schools.com/tags/ref\_urlencode.ASP) of forward slash /) and the HTTP response headers.
 
@@ -87,7 +87,7 @@ The second request simply checks if the target is vulnerable to the exploit, we'
 
 ### Exploit
 
-<figure><img src=".gitbook/assets/image (5) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>4</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>4</p></figcaption></figure>
 
 You may have noticed some similarities between the check and exploit functions, they are identical aside from the fact that the exploit function sends the actual payload. The initial POST request, formatting cookies and second request to send the payload are identical to the check function. This makes this script easier for us as we can condense redundant code.
 
@@ -232,7 +232,7 @@ Using the `string` and `secrets` modules we're able to make a function that rand
 
 We can then input this variable to be randomly generated with five characters `randChar = ''.join(secrets.choice(alphaNum) for i in range(5))`
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>5</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>5</p></figcaption></figure>
 
 And we have our invalid input function.
 
@@ -240,7 +240,7 @@ And we have our invalid input function.
 
 There are numerous ways to execute the system shell on Linux as we have the freedom to execute any command that we want. In this scenario we will save steps and space by using `bash` to open a connection to the attacker and send the shell. [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#reverse-shell) lists the following examples:
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>6</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>6</p></figcaption></figure>
 
 The first command listed `bash -i` is a popular one line command to establish an interactive reverse shell on a system. This will be the basis for our payload() function but it does require some tweaks. While it executes a reverse shell, we are missing a key point. Without specifying what to do with the bash shell that executes on boot, the system is unable to distinguish between separate processes of bash. To fix this, we can use `bash -c 'exec bash -i xyz'`
 
