@@ -260,7 +260,7 @@ As I was looking around the configurations and information for router and switch
 
 <figure><img src="https://shishirsubedi.com.np/assets/images/thm/motunui/5.png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
 We can use the password to login `moana` account via ssh.
 
@@ -272,9 +272,9 @@ moana : H0wF4ri'LLG0
 
 Run LinPEAS.sh on the box.
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 This file is a pre-master **secret key** uses to decrypt TLS which we can use in Wireshark as we also found some TLS traffics on the PCAP file.
 
@@ -282,7 +282,7 @@ This file is a pre-master **secret key** uses to decrypt TLS which we can use in
 
 Use this [blog](https://www.comparitech.com/net-admin/decrypt-ssl-with-wireshark/?source=post\_page-----a73032b26705--------------------------------) to decrypt TLS / SSL traffic using Wireshark.
 
-<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 {% code overflow="wrap" %}
 ```bash

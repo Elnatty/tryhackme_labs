@@ -91,9 +91,9 @@ index.php
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 We modify the value of  the `env` value in the webapp.ini file to `dev` from `prod` and send it using rsync.
 
@@ -105,7 +105,7 @@ dking@dking ~/Downloads/files$ rsync webapp.ini rsync://rsync-connect@10.10.136.
 
 And now we can access the `/admin` page.
 
-<figure><img src=".gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The room hint said SQL injection, so we can start checking from here.
 
