@@ -95,3 +95,4 @@
 * [92 - Road (email hijacking, MongoDB, LD\_PRELOAD exploitation)](92-road-email-hijacking-mongodb-ld\_preload-exploitation.md)
 * [93 - Motunui (json bruteforce, Decrypting SSL/TLS with Wireshark)](93-motunui-json-bruteforce-decrypting-ssl-tls-with-wireshark.md)
 * [94 - Spring (GIT files analysis, SpringBoot RCE, su bruteforce, Modify service files to gain root)](94-spring-git-files-analysis-springboot-rce-su-bruteforce-modify-service-files-to-gain-root.md)
+* [95 - Borderlands (Mannual GIT repo exploitation, SQLI)](95-borderlands-mannual-git-repo-exploitation-sqli.md)
