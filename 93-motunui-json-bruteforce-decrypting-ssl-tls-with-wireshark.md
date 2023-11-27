@@ -62,7 +62,7 @@ The image is a screenshot that shows a Virtual Host on the address bar. I then a
 
 We got a virtual host name from the image.
 
-<figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7) (1).png" alt=""><figcaption></figcaption></figure>
 
 Add to /etc/hosts file --> `d3v3lopm3nt.motunui.thm`&#x20;
 
@@ -223,11 +223,11 @@ No reasonable jobs for the `maui` user, we can edit this to spawn a reverse shel
 }
 ```
 
-<figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
 
 And got shell almost immediately.
 
-<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Priv Esc to moana
 
@@ -260,7 +260,7 @@ As I was looking around the configurations and information for router and switch
 
 <figure><img src="https://shishirsubedi.com.np/assets/images/thm/motunui/5.png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 We can use the password to login `moana` account via ssh.
 
@@ -272,9 +272,9 @@ moana : H0wF4ri'LLG0
 
 Run LinPEAS.sh on the box.
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 This file is a pre-master **secret key** uses to decrypt TLS which we can use in Wireshark as we also found some TLS traffics on the PCAP file.
 
@@ -282,7 +282,7 @@ This file is a pre-master **secret key** uses to decrypt TLS which we can use in
 
 Use this [blog](https://www.comparitech.com/net-admin/decrypt-ssl-with-wireshark/?source=post\_page-----a73032b26705--------------------------------) to decrypt TLS / SSL traffic using Wireshark.
 
-<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 {% code overflow="wrap" %}
 ```bash
@@ -291,7 +291,7 @@ root : Pl3aseW0rk
 ```
 {% endcode %}
 
-<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
 
 `su root` and we are root.
 
