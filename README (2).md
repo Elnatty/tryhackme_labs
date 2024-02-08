@@ -84,12 +84,15 @@ sed 's/decodestring/decodebytes/' /usr/bin/ssh2john | python3 - id_rsa > hash_id
 ```
 {% endcode %}
 
-### hash analyzer
+### hash analyzer / hash cracker
 
 {% code overflow="wrap" lineNumbers="true" %}
 ```bash
 # identify hashes
 https://www.tunnelsup.com/hash-analyzer/
+
+# search for hashes
+https://github.com/HashPals/Search-That-Hash
 ```
 {% endcode %}
 
