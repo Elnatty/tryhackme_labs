@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Reverse Shells](README.md)
+* [Reverse Shells / File Transfers](README.md)
 * [tyhackme Tricks](<README (2).md>)
 * [1 - UltraTech](<README (1).md>)
 * [2 - Python Playground](2-python-playground.md)
